@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  client:
+    image: ${REGISTRY_HOST-localhost}/localio:dev-${CI_COMMIT_SHORT_SHA-local}
+    tty: true
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+      target: depends
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/localio
+      - /localio/node_modules
+    command: ['pnpm', 'dev']

@@ -11,12 +11,14 @@ export const env = createEnv({
       .string()
       .url()
       .refine(
-        (str) => !str.includes("YOUR_MYSQL_URL_HERE"),
+        (str) => !str.includes("YOUR_SQL_URL_HERE"),
         "You forgot to change the default URL"
       ),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
+    BOT_TOKEN: z.string(),
+    BOT_USERNAME: z.string()
   },
 
   /**
@@ -35,6 +37,8 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
+    BOT_TOKEN: process.env.BOT_TOKEN,
+    BOT_USERNAME: process.env.BOT_USERNAME
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**
