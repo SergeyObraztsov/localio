@@ -1,12 +1,22 @@
 import '~/styles/globals.css';
 
-import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 import AuthProvider from './auth-provider';
-import Nav from '~/components/nav';
 
-const inter = Inter({
-  subsets: ['cyrillic'],
-  variable: '--font-sans'
+const pragmaticaFont = localFont({
+  src: [
+    {
+      path: '../../public/fonts/Pragmatica-Black.ttf',
+      weight: '700',
+      style: 'normal'
+    },
+    {
+      path: '../../public/fonts/Pragmatica-Book.ttf',
+      weight: '400',
+      style: 'normal'
+    }
+  ],
+  variable: '--font-pragmatic'
 });
 
 export const metadata = {
@@ -19,11 +29,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <AuthProvider>
       <html lang="ru">
-        <body className={`font-sans ${inter.variable} flex justify-center bg-gray-800`}>
-          <div className="max-w-md w-full h-screen bg-white">
-            <Nav />
-            <main>{children}</main>
-          </div>
+        <body
+          className={`${pragmaticaFont.className} font-sans flex justify-center bg-green text-white`}
+        >
+          {/* <Nav /> */}
+          <main className="max-w-md w-full h-screen bg-gray-dark">
+            <div className="flex flex-col flex-shrink h-full p-4 gap-4">{children}</div>
+          </main>
         </body>
       </html>
     </AuthProvider>

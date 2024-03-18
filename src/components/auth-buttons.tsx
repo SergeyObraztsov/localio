@@ -20,7 +20,10 @@ export default function SignInButton({ botUsername }: { botUsername: string }) {
   const onTelegramAuth = (data: TelegramAuthData) => {
     void signIn(
       'telegram-login',
-      { callbackUrl: '/' },
+      {
+        callbackUrl: '/',
+        redirect: false
+      },
       data as unknown as SignInAuthorizationParams
     );
   };
@@ -55,5 +58,7 @@ export default function SignInButton({ botUsername }: { botUsername: string }) {
     );
   }
 
-  return <LoginButton botUsername={botUsername} onAuthCallback={onTelegramAuth} />;
+  return (
+    <LoginButton botUsername={botUsername} onAuthCallback={onTelegramAuth} showAvatar={false} />
+  );
 }
