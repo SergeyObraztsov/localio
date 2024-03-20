@@ -6,6 +6,7 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '~/components/ui/input-otp
 import Steps from '~/components/steps';
 
 import Image from 'next/image';
+import { Textarea } from '~/components/ui/textarea';
 // import CameraIcon from '';
 
 export default function AuthPage() {
@@ -70,6 +71,7 @@ export default function AuthPage() {
           <Input type="file" id="avatar" name="avatar" className="hidden" />
         </div>
         <div className="grid w-full items-center gap-2">
+          <h3 className="font-bold text-sm">Основное</h3>
           <div className="rounded-lg overflow-hidden">
             <Input
               className="rounded-none border-b border-b-gray-light"
@@ -77,6 +79,7 @@ export default function AuthPage() {
               id="name"
               name="name"
               placeholder="Ваше имя"
+              label="Имя"
               required
             />
             <Input
@@ -85,6 +88,7 @@ export default function AuthPage() {
               id="job_title"
               name="job_title"
               placeholder="Должность"
+              label="Должность"
               required
             />
             <Input
@@ -92,17 +96,66 @@ export default function AuthPage() {
               type="text"
               id="job_place"
               name="job_place"
-              placeholder="Место работы"
+              placeholder="Город"
+              label="Город"
               required
             />
           </div>
-          <Label className="text-[#ffffff66]">
-            Заполнить информацию полностью можно потом в вашем профиле. Если хотите сделать это
-            сейчас,{' '}
-            <Button variant="link" size="inline" className="inline text-white text-[10px]">
-              нажмите сюда
-            </Button>
+          <Button variant="outline" size="lg" className="rounded-full">
+            Привязать Телеграм
+          </Button>
+          <Label className="text-[#ffffff66] max-w-64">
+            При нажатии вы перейдёте в Телеграм-бота, где привяжете свой аккаунт
           </Label>
+
+          <div className="grid w-full items-center gap-2">
+            <h3 className="font-bold text-sm">Дополнительное</h3>
+            <div className="rounded-lg overflow-hidden">
+              <Input
+                className="rounded-none border-b border-b-gray-light"
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Ваше"
+                label="Ищу"
+                required
+              />
+              <Input
+                className="rounded-none border-b border-b-gray-light"
+                type="text"
+                id="job_title"
+                name="job_title"
+                placeholder="Должность"
+                label="Чем могу помочь"
+                required
+              />
+              <Input
+                className="rounded-none border-b border-b-gray-light"
+                type="text"
+                id="job_place"
+                name="job_place"
+                placeholder="Место работы"
+                label="Город"
+                required
+              />
+              <Textarea
+                className="rounded-none resize-none"
+                id="job_place"
+                name="job_place"
+                placeholder="Место работы"
+                label="О себе"
+                required
+              />
+            </div>
+          </div>
+          <Input
+            type="text"
+            id="email"
+            name="email"
+            placeholder="oleg@mail.ru"
+            label="Э-почта"
+            required
+          />
         </div>
       </div>
       <div className="flex justify-center w-full">

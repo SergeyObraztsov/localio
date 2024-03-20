@@ -1,10 +1,33 @@
 'use client';
+import Image from 'next/image';
 
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/effect-cards';
 import { EffectCards } from 'swiper/modules';
-import Image from 'next/image';
+import { Button } from './ui/button';
+
+const Cards: { id: number; title: string; description: React.ReactNode; imageSrc: string }[] = [
+  {
+    id: 1,
+    title: 'Зарегистрируйтесь',
+    description: 'Чтобы увидеть подписчиков спота',
+    imageSrc: '/icons/enter.svg'
+  },
+  {
+    id: 2,
+    title: 'Привяжите телеграм',
+    description: (
+      <>
+        Просто{' '}
+        <Button variant="link" size="inline">
+          нажмите сюда
+        </Button>
+      </>
+    ),
+    imageSrc: '/icons/telegram.svg'
+  }
+];
 
 export default function InfoCards() {
   return (
@@ -16,19 +39,17 @@ export default function InfoCards() {
         cardsEffect={{ rotate: false, slideShadows: true, perSlideOffset: 10 }}
         className="w-11/12 h-16 !ml-0"
       >
-        {Array(4)
-          .fill(1)
-          .map((_, idx) => (
-            <SwiperSlide key={idx} className="rounded-xl bg-[#2B2C2D]">
-              <div className="w-full h-full flex items-center p-4 gap-5">
-                <Image src="/icons/enter.svg" alt="enter" width={23} height={30} />
-                <div className="flex flex-col">
-                  <p className="text-sm font-bold">Зарегистрируйтесь</p>
-                  <p className="text-sm">Чтобы увидеть подписчиков спота</p>
-                </div>
+        {Cards.map((card) => (
+          <SwiperSlide key={card.id} className="rounded-xl bg-[#2B2C2D]">
+            <div className="w-full h-full flex items-center p-4 gap-5">
+              <Image src={card.imageSrc} alt="enter" width={32} height={32} />
+              <div className="flex flex-col">
+                <p className="text-sm font-bold">{card.title}</p>
+                <p className="text-sm">{card.description}</p>
               </div>
-            </SwiperSlide>
-          ))}
+            </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );

@@ -16,7 +16,7 @@ export default function PeopleList({ list }: { list: PeopleListItem[] }) {
 
 function PeopleListItem({ item }: { item: PeopleListItem }) {
   return (
-    <li className="flex items-center gap-4">
+    <li className="flex items-center gap-4 overflow-auto">
       <Avatar>
         <AvatarImage src={item.imageSrc} />
         <AvatarFallback>{item.name}</AvatarFallback>
