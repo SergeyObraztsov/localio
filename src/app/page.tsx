@@ -7,6 +7,7 @@ import { Button } from '~/components/ui/button';
 import PeopleList from '~/components/people-list';
 import type { PeopleListItem } from '~/types/common';
 import InfoCards from '~/components/info-cards';
+import Link from 'next/link';
 
 const PEOPLES_ON_A_SPOT: PeopleListItem[] = [
   {
@@ -53,7 +54,7 @@ export default async function Home() {
     //   <h1>{user?.id}</h1>
     //   <h1>{user?.createdAt.getTime()}</h1>
     // </div>
-    <>
+    <div className="flex flex-col flex-shrink h-full min-h-screen p-4 gap-4">
       <header className="flex items-center justify-between">
         <div className="flex flex-col gap-1">
           <h1 className="font-bold text-2xl">Мята Lounge</h1>
@@ -68,10 +69,12 @@ export default async function Home() {
             <p className="text-sm font-normal">пр. Ильюшина д. 5 к.1</p>
           </div>
         </div>
-        <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
+        <Link href="/profile" passHref>
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+        </Link>
       </header>
 
       <AspectRatio ratio={16 / 9}>
@@ -85,9 +88,13 @@ export default async function Home() {
       </AspectRatio>
 
       <PeopleList list={PEOPLES_ON_A_SPOT} />
-      <div className="flex-1"></div>
+
+      <div className="flex-1" />
+
       <InfoCards />
-      <Button className="rounded-full w-full">Хочу общаться</Button>
-    </>
+      <Button className="rounded-full w-full" asChild>
+        <Link href="/auth">Хочу общаться</Link>
+      </Button>
+    </div>
   );
 }

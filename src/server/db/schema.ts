@@ -14,10 +14,11 @@ export const createTable = pgTableCreator((name) => name);
 
 export const users = createTable('users', {
   id: serial('id').primaryKey().notNull(),
-  username: varchar('username', { length: 256 }),
+  firstName: varchar('first_name', { length: 256 }),
+  lastName: varchar('last_name', { length: 256 }),
+  phoneNumber: varchar('phone_number', { length: 256 }),
   email: varchar('email', { length: 256 }),
   image: varchar('image'),
-  passwordHash: varchar('password_hash'),
   createdAt: timestamp('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull()
@@ -29,10 +30,9 @@ export const usersRelations = relations(users, ({ one }) => ({
 
 export const usersProfiles = createTable('user_profiles', {
   id: serial('id').primaryKey(),
-  userId: integer('country_id').references(() => users.id),
+  userId: integer('user_id').references(() => users.id),
   position: varchar('position', { length: 256 }),
-  interests: varchar('interests', { length: 256 }),
-  contactInfo: varchar('contact_info', { length: 256 })
+  telegramLink: varchar('telegram_link', { length: 256 })
 });
 
 export const profileRelations = relations(usersProfiles, ({ one }) => ({
@@ -44,18 +44,25 @@ export const spots = createTable('spots', {
   name: varchar('name', { length: 256 }),
   description: text('description'),
   location: varchar('location'),
+  typeId: integer('type_id').references(() => spotTypes.id),
   createdAt: timestamp('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull()
 });
 
-export const spotsRelations = relations(spots, ({ many }) => ({
-  subscriptions: many(spotSubscriptions)
+export const spotsRelations = relations(spots, ({ many, one }) => ({
+  subscriptions: many(spotSubscriptions),
+  types: one(spotTypes, { fields: [spots.typeId], references: [spotTypes.id] })
 }));
+
+export const spotTypes = createTable('spot_types', {
+  id: serial('id').primaryKey(),
+  image: varchar('image')
+});
 
 export const spotSubscriptions = createTable('spot_subscriptions', {
   id: serial('id').primaryKey(),
-  userId: integer('country_id').references(() => users.id),
+  userId: integer('user_id').references(() => users.id),
   spotId: integer('spot_id').references(() => spots.id),
   createdAt: timestamp('created_at')
     .default(sql`CURRENT_TIMESTAMP`)

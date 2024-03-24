@@ -30,13 +30,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <AuthProvider>
       <html lang="ru">
         <body
-          className={`${pragmaticaFont.className} font-sans flex justify-center bg-green backdrop-contrast-50 text-white`}
+          className={`${pragmaticaFont.className} font-sans flex justify-center bg-gray-dark text-white`}
         >
           {/* <Nav /> */}
-          <main className="max-w-md w-full overflow-hidden bg-gray-dark">
-            <div className="flex flex-col flex-shrink h-full min-h-screen p-4 gap-4">
-              {children}
-            </div>
+          <main className="max-w-md w-full sm:border-x overflow-hidden">
+            <div>{children}</div>
           </main>
         </body>
       </html>

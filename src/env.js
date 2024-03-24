@@ -18,7 +18,8 @@ export const env = createEnv({
       .enum(["development", "test", "production"])
       .default("development"),
     BOT_TOKEN: z.string(),
-    BOT_USERNAME: z.string()
+    BOT_USERNAME: z.string(),
+    SMS_RU_TOKEN: z.string(),
   },
 
   /**
@@ -38,7 +39,8 @@ export const env = createEnv({
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     BOT_TOKEN: process.env.BOT_TOKEN,
-    BOT_USERNAME: process.env.BOT_USERNAME
+    BOT_USERNAME: process.env.BOT_USERNAME,
+    SMS_RU_TOKEN: process.env.SMS_RU_TOKEN,
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

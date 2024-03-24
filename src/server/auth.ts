@@ -1,5 +1,5 @@
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
-import { getServerSession, type DefaultSession, type NextAuthOptions } from 'next-auth';
+import { getServerSession, type DefaultSession, type NextAuthOptions, User } from 'next-auth';
 import { type Adapter } from 'next-auth/adapters';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
@@ -8,7 +8,7 @@ import { objectToAuthDataMap, AuthDataValidator } from '@telegram-auth/server';
 import { env } from '~/env';
 import { db } from '~/server/db';
 import { createTable } from '~/server/db/schema';
-import { createUserOrUpdate } from './db/seed';
+import { createUser, createUserOrUpdate } from './db/seed';
 
 declare module 'next-auth' {
   interface Session extends DefaultSession {
@@ -37,6 +37,21 @@ export const authOptions: NextAuthOptions = {
   },
   adapter: DrizzleAdapter(db, createTable) as Adapter,
   providers: [
+    CredentialsProvider({
+      id: 'phone-login',
+      name: 'Phone Login',
+      credentials: {},
+      //@ts-expect-error
+      async authorize(credentials, req) {
+        const phoneNumber = req.query?.phone as string;
+        if (!phoneNumber) return null;
+
+        const user = await createUser({ phoneNumber });
+        if (!user) return null;
+        //@ts-ignore
+        return user;
+      }
+    }),
     CredentialsProvider({
       id: 'telegram-login',
       name: 'Telegram Login',
