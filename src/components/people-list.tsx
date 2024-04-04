@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import type { Subscription, User } from '~/types/common';
+import type { SpotSubscription, SpotUser } from '~/types/common';
 
-export default function PeopleList({ list }: { list: Subscription[] }) {
+export default function PeopleList({ list }: { list: SpotSubscription[] }) {
   return (
     <div>
       <p className="font-bold">{list.length} подписчиков на споте</p>
@@ -16,7 +16,7 @@ export default function PeopleList({ list }: { list: Subscription[] }) {
   );
 }
 
-function PeopleListItem({ item }: { item: User }) {
+function PeopleListItem({ item }: { item: SpotUser }) {
   const name = item.name ?? '';
   return (
     <li className="flex items-center gap-4 overflow-auto">

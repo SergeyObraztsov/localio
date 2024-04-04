@@ -6,7 +6,6 @@ import { z } from 'zod';
 import type { FormState, UserCreateData } from '~/types/common';
 import { db } from '../server/db/index';
 import { users, usersProfiles } from '../server/db/schema';
-import { saveFileInBucket } from './static-files-actions';
 
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
@@ -168,14 +167,14 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
   const { userId, name, position, email, description, image } = parse.data;
 
   try {
-    const imageBuffer = image ? await bufferFromFile(image) : null;
-    if (imageBuffer) {
-      await saveFileInBucket({
-        bucketName: 'main',
-        fileName: image?.name ?? '',
-        file: imageBuffer
-      });
-    }
+    // const imageBuffer = image ? await bufferFromFile(image) : null;
+    // if (imageBuffer) {
+    //   await saveFileInBucket({
+    //     bucketName: 'main',
+    //     fileName: image?.name ?? '',
+    //     file: imageBuffer
+    //   });
+    // }
     await db
       .update(users)
       .set({

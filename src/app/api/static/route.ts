@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { minioClient } from '~/server/minio';
 
 async function getFileFromBucket({
@@ -17,7 +16,7 @@ async function getFileFromBucket({
   return await minioClient.getObject(bucketName, fileName);
 }
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET() {
   // get the file from the bucket and pipe it to the response object
   const data = await getFileFromBucket({
     bucketName: 'main',
