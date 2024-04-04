@@ -20,6 +20,10 @@ export const env = createEnv({
     BOT_TOKEN: z.string(),
     BOT_USERNAME: z.string(),
     SMS_RU_TOKEN: z.string(),
+    NEXTAUTH_SECRET: z.string(),
+    S3_API_SECRET_TOKEN: z.string(),
+    S3_API_ACCESS_TOKEN: z.string(),
+    SERVER_URL: z.string(),
   },
 
   /**
@@ -41,6 +45,10 @@ export const env = createEnv({
     BOT_TOKEN: process.env.BOT_TOKEN,
     BOT_USERNAME: process.env.BOT_USERNAME,
     SMS_RU_TOKEN: process.env.SMS_RU_TOKEN,
+    NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
+    S3_API_SECRET_TOKEN: process.env.S3_API_SECRET_TOKEN,
+    S3_API_ACCESS_TOKEN: process.env.S3_API_ACCESS_TOKEN,
+    SERVER_URL: process.env.SERVER_URL
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

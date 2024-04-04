@@ -30,7 +30,7 @@ const InputOTPSlot = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        'relative flex h-10 w-10 items-center justify-center bg-gray-light text-sm transition-all rounded-md',
+        'relative flex h-10 w-10 items-center justify-center rounded-md bg-white/10 text-sm transition-all',
         isActive && '',
         className
       )}
@@ -46,7 +46,7 @@ InputOTPSlot.displayName = 'InputOTPSlot';
 function FakeCaret() {
   return (
     <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-      <div className="animate-caret-blink h-4 w-px bg-white duration-1000" />
+      <div className="h-4 w-px animate-caret-blink bg-white duration-1000" />
     </div>
   );
 }

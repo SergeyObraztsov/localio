@@ -15,7 +15,7 @@ export default function Steps({
           <div
             key={`Step-${idx}`}
             className={cn(
-              'flex items-center justify-center w-6 h-6 rounded-full bg-gray-light',
+              'flex h-6 w-6 items-center justify-center rounded-full bg-white/10 font-bold',
               currentStepIndex === idx && 'bg-green'
             )}
           >

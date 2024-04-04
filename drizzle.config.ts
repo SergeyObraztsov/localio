@@ -1,13 +1,12 @@
-import { type Config } from "drizzle-kit";
+import { type Config } from 'drizzle-kit';
 
-import { env } from "~/env";
+import { env } from '~/env';
 
 export default {
-  schema: "./src/server/db/schema.ts",
+  schema: './src/server/db/schema.ts',
   out: './drizzle',
-  driver: "pg",
+  driver: 'pg',
   dbCredentials: {
-    connectionString: env.DATABASE_URL,
-  },
-  tablesFilter: ["localio_*"],
+    connectionString: env.DATABASE_URL
+  }
 } satisfies Config;

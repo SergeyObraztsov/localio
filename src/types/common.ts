@@ -1,19 +1,3 @@
-import { AuthTabs } from './enums';
-
-export type PeopleListItem = {
-  id: number;
-  imageSrc: string;
-  name: string;
-  job_title: string;
-};
-
-export type SpotListItem = {
-  id: number;
-  imageSrc: string;
-  name: string;
-  location: string;
-};
-
 export type UserCreateData = {
   phoneNumber: string;
 };
@@ -21,12 +5,69 @@ export type UserCreateData = {
 export type SMSRuCodeCallResponse = {
   status: string;
   status_code: number;
+  status_text: string;
+  code?: string | number;
   sms: Record<string, unknown>;
   balance: number;
 };
 
-export type AuthState = {
+export type FormState = {
   message: string;
   isSuccessful: boolean;
-  tab: AuthTabs;
+};
+
+export type Spot = {
+  id: string;
+  name: string | null;
+  description: string | null;
+  location: string | null;
+  typeId: number;
+  subscriptions: SpotSubscription[];
+};
+
+export type SpotSubscription = {
+  id: number;
+  user: SpotUser | null;
+};
+
+export type SpotUser = {
+  id: string;
+  name: string | null;
+  image: string | null;
+  usersProfile: UsersProfile | null;
+};
+
+export type UsersProfile = {
+  id: string;
+  userId: string;
+  position: string | null;
+  telegramChatId: string | null;
+  telegramId: string | null;
+  telegramUsername: string | null;
+};
+
+export type UserSpot = {
+  id: number;
+  spot: {
+    id: string;
+    name: string | null;
+    location: string | null;
+    types: {
+      image: string | null;
+    };
+  };
+};
+
+export type User = {
+  email: string | null;
+  name: string | null;
+  id: string;
+  image: string | null;
+  phoneNumber: string | null;
+  isActivated: boolean | null;
+  usersProfile: {
+    description: string | null;
+    position: string | null;
+    telegramUsername: string | null;
+  } | null;
 };

@@ -11,14 +11,14 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="relative">
         {label && (
-          <label className="absolute top-2 left-3 text-[10px] text-[#ffffff4d]" htmlFor={id}>
+          <label className="absolute left-3 top-2 text-[10px] text-[#ffffff4d]" htmlFor={id}>
             {label}
           </label>
         )}
         <textarea
           className={cn(
-            'flex min-h-32 w-full rounded-lg bg-gray-light text-sm placeholder:text-[#ffffff4d] focus:ring-0 focus:ring-offset-0 outline-none disabled:cursor-not-allowed disabled:opacity-50',
-            label ? 'h-14 px-3 pt-7 pb-2' : 'h-10 px-3 py-2',
+            'flex min-h-32 w-full rounded-lg bg-white/10 text-sm caret-white outline-none placeholder:text-[#ffffff4d] focus:ring-0 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50',
+            label ? 'h-14 px-3 pb-2 pt-7' : 'h-10 px-3 py-2',
             className
           )}
           id={id}
@@ -27,7 +27,7 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
           {...props}
         />
         {maxLength && (
-          <p className="absolute right-2 bottom-3 text-[10px] text-[#ffffff4d]">
+          <p className="absolute bottom-3 right-2 text-[10px] text-[#ffffff4d]">
             {0} / {maxLength}
           </p>
         )}

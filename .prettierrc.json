@@ -8,5 +8,9 @@
   "semi": true,
   "requirePragma": false,
   "proseWrap": "preserve",
-  "arrowParens": "always"
+  "arrowParens": "always",
+  "plugins": [
+    "prettier-plugin-organize-imports",
+    "prettier-plugin-tailwindcss"
+  ]
 }

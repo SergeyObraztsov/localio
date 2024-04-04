@@ -1,3 +1,4 @@
+import type { Viewport } from 'next';
 import '~/styles/globals.css';
 
 import localFont from 'next/font/local';
@@ -6,7 +7,7 @@ import AuthProvider from './auth-provider';
 const pragmaticaFont = localFont({
   src: [
     {
-      path: '../../public/fonts/Pragmatica-Black.ttf',
+      path: '../../public/fonts/PragmaticaExtended-Bold.ttf',
       weight: '700',
       style: 'normal'
     },
@@ -21,19 +22,23 @@ const pragmaticaFont = localFont({
 
 export const metadata = {
   title: 'Localio',
-  description: 'ННетворкинг надо?',
+  description: 'Нетворкинг',
   icons: [{ rel: 'icon', url: '/favicon.ico' }]
+};
+
+export const viewport: Viewport = {
+  maximumScale: 1,
+  initialScale: 1,
+  width: 'device-width'
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <AuthProvider>
       <html lang="ru">
-        <body
-          className={`${pragmaticaFont.className} font-sans flex justify-center bg-gray-dark text-white`}
-        >
+        <body className={`${pragmaticaFont.className} flex justify-center bg-gray-dark text-white`}>
           {/* <Nav /> */}
-          <main className="max-w-md w-full sm:border-x overflow-hidden">
+          <main className="w-full max-w-md overflow-hidden sm:border-x">
             <div>{children}</div>
           </main>
         </body>

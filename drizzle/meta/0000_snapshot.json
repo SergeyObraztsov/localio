@@ -1,11 +1,11 @@
 {
-  "id": "5e07d5ee-6ca1-4a0d-b378-a268612496d0",
+  "id": "2271b8e6-05a0-4978-af4f-5de02012c07b",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "5",
   "dialect": "pg",
   "tables": {
-    "localio_spot_subscriptions": {
-      "name": "localio_spot_subscriptions",
+    "spot_subscriptions": {
+      "name": "spot_subscriptions",
       "schema": "",
       "columns": {
         "id": {
@@ -14,15 +14,15 @@
           "primaryKey": true,
           "notNull": true
         },
-        "country_id": {
-          "name": "country_id",
-          "type": "integer",
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
         "spot_id": {
           "name": "spot_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -42,12 +42,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "localio_spot_subscriptions_country_id_localio_users_id_fk": {
-          "name": "localio_spot_subscriptions_country_id_localio_users_id_fk",
-          "tableFrom": "localio_spot_subscriptions",
-          "tableTo": "localio_users",
+        "spot_subscriptions_user_id_users_id_fk": {
+          "name": "spot_subscriptions_user_id_users_id_fk",
+          "tableFrom": "spot_subscriptions",
+          "tableTo": "users",
           "columnsFrom": [
-            "country_id"
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -55,10 +55,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "localio_spot_subscriptions_spot_id_localio_spots_id_fk": {
-          "name": "localio_spot_subscriptions_spot_id_localio_spots_id_fk",
-          "tableFrom": "localio_spot_subscriptions",
-          "tableTo": "localio_spots",
+        "spot_subscriptions_spot_id_spots_id_fk": {
+          "name": "spot_subscriptions_spot_id_spots_id_fk",
+          "tableFrom": "spot_subscriptions",
+          "tableTo": "spots",
           "columnsFrom": [
             "spot_id"
           ],
@@ -72,8 +72,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "localio_spots": {
-      "name": "localio_spots",
+    "spot_types": {
+      "name": "spot_types",
       "schema": "",
       "columns": {
         "id": {
@@ -81,6 +81,29 @@
           "type": "serial",
           "primaryKey": true,
           "notNull": true
+        },
+        "image": {
+          "name": "image",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "spots": {
+      "name": "spots",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "name": {
           "name": "name",
@@ -100,6 +123,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "type_id": {
+          "name": "type_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -109,23 +138,56 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "spots_type_id_spot_types_id_fk": {
+          "name": "spots_type_id_spot_types_id_fk",
+          "tableFrom": "spots",
+          "tableTo": "spot_types",
+          "columnsFrom": [
+            "type_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "localio_users": {
-      "name": "localio_users",
+    "users": {
+      "name": "users",
       "schema": "",
       "columns": {
         "id": {
           "name": "id",
-          "type": "serial",
+          "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "username": {
-          "name": "username",
+        "first_name": {
+          "name": "first_name",
           "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_name": {
+          "name": "last_name",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "sms_code": {
+          "name": "sms_code",
+          "type": "varchar(4)",
           "primaryKey": false,
           "notNull": false
         },
@@ -135,8 +197,8 @@
           "primaryKey": false,
           "notNull": false
         },
-        "password_hash": {
-          "name": "password_hash",
+        "image": {
+          "name": "image",
           "type": "varchar",
           "primaryKey": false,
           "notNull": false
@@ -154,8 +216,8 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "localio_user_profiles": {
-      "name": "localio_user_profiles",
+    "user_profiles": {
+      "name": "user_profiles",
       "schema": "",
       "columns": {
         "id": {
@@ -164,9 +226,9 @@
           "primaryKey": true,
           "notNull": true
         },
-        "country_id": {
-          "name": "country_id",
-          "type": "integer",
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
@@ -176,14 +238,20 @@
           "primaryKey": false,
           "notNull": false
         },
-        "interests": {
-          "name": "interests",
+        "telegram_chat_id": {
+          "name": "telegram_chat_id",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false
         },
-        "contact_info": {
-          "name": "contact_info",
+        "telegram_id": {
+          "name": "telegram_id",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "telegram_username": {
+          "name": "telegram_username",
           "type": "varchar(256)",
           "primaryKey": false,
           "notNull": false
@@ -191,12 +259,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "localio_user_profiles_country_id_localio_users_id_fk": {
-          "name": "localio_user_profiles_country_id_localio_users_id_fk",
-          "tableFrom": "localio_user_profiles",
-          "tableTo": "localio_users",
+        "user_profiles_user_id_users_id_fk": {
+          "name": "user_profiles_user_id_users_id_fk",
+          "tableFrom": "user_profiles",
+          "tableTo": "users",
           "columnsFrom": [
-            "country_id"
+            "user_id"
           ],
           "columnsTo": [
             "id"

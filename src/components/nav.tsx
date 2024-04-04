@@ -6,7 +6,7 @@ import { env } from '~/env';
 
 export default function Nav() {
   return (
-    <nav className="sticky top-0 z-40 bg-background w-full flex flex-col gap-1 pt-1">
+    <nav className="bg-background sticky top-0 z-40 flex w-full flex-col gap-1 pt-1">
       <div className="flex items-center justify-between px-5 py-1">
         <Link href="/">
           <div className="flex items-center gap-1 ">
@@ -16,7 +16,7 @@ export default function Nav() {
               viewBox="0 0 24 24"
               strokeWidth={1.5}
               stroke="currentColor"
-              className="w-6 h-6"
+              className="h-6 w-6"
             >
               <path
                 strokeLinecap="round"
