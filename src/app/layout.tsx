@@ -2,7 +2,6 @@ import type { Viewport } from 'next';
 import '~/styles/globals.css';
 
 import localFont from 'next/font/local';
-import AuthProvider from './auth-provider';
 
 const pragmaticaFont = localFont({
   src: [
@@ -34,15 +33,13 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <AuthProvider>
-      <html lang="ru">
-        <body className={`${pragmaticaFont.className} flex justify-center bg-gray-dark text-white`}>
-          {/* <Nav /> */}
-          <main className="w-full max-w-md overflow-hidden sm:border-x">
-            <div>{children}</div>
-          </main>
-        </body>
-      </html>
-    </AuthProvider>
+    <html lang="ru">
+      <body className={`${pragmaticaFont.className} flex justify-center bg-gray-dark text-white`}>
+        {/* <Nav /> */}
+        <main className="w-full max-w-md overflow-hidden sm:border-x">
+          <div>{children}</div>
+        </main>
+      </body>
+    </html>
   );
 }
