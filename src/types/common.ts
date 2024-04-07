@@ -19,6 +19,7 @@ export type FormState = {
 export type Spot = {
   id: string;
   name: string | null;
+  image: string | null;
   description: string | null;
   location: string | null;
   typeId: number;
@@ -41,9 +42,6 @@ export type UsersProfile = {
   id: string;
   userId: string;
   position: string | null;
-  telegramChatId: string | null;
-  telegramId: string | null;
-  telegramUsername: string | null;
 };
 
 export type UserSpot = {
@@ -61,13 +59,11 @@ export type UserSpot = {
 export type User = {
   email: string | null;
   name: string | null;
-  id: string;
+  id: number;
   image: string | null;
   phoneNumber: string | null;
-  isActivated: boolean | null;
   usersProfile: {
     description: string | null;
     position: string | null;
-    telegramUsername: string | null;
   } | null;
 };

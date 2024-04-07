@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 
 import { cn } from '~/lib/utils';
@@ -8,6 +9,29 @@ export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & 
 
 const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
   ({ className, label, id, maxLength, ...props }, ref) => {
+    const [charCount, setCharCount] = React.useState(0);
+    const textAreaRef = React.useRef<HTMLTextAreaElement>(null);
+
+    React.useEffect(() => {
+      const handleInput = () => {
+        if (textAreaRef.current) {
+          const newText = textAreaRef.current.value;
+          setCharCount(newText.length);
+        }
+      };
+
+      const textarea = textAreaRef.current;
+      if (textarea) {
+        textarea.addEventListener('input', handleInput);
+      }
+
+      return () => {
+        if (textarea) {
+          textarea.removeEventListener('input', handleInput);
+        }
+      };
+    }, []);
+
     return (
       <div className="relative">
         {label && (
@@ -22,13 +46,13 @@ const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
             className
           )}
           id={id}
-          ref={ref}
+          ref={ref ?? textAreaRef}
           maxLength={maxLength}
           {...props}
         />
-        {maxLength && (
+        {maxLength && !ref && (
           <p className="absolute bottom-3 right-2 text-[10px] text-[#ffffff4d]">
-            {0} / {maxLength}
+            {charCount} / {maxLength}
           </p>
         )}
       </div>

@@ -1,11 +1,7 @@
 import { useFormStatus } from 'react-dom';
-import { Button } from '~/components/ui/button';
+import TelegramMainButton from '~/components/telegram-main-button';
 
-export default function SubmitButton() {
+export default function SubmitButton({ onClick }: { onClick: VoidFunction }) {
   const { pending } = useFormStatus();
-  return (
-    <Button type="submit" className="w-full rounded-full" disabled={pending}>
-      Далее
-    </Button>
-  );
+  return <TelegramMainButton onClick={onClick} text="Далее" progress={pending} />;
 }

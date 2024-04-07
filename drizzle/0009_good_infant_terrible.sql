@@ -1,1 +1,0 @@
-ALTER TABLE "spot" ADD COLUMN "image" varchar;

@@ -1,113 +1,62 @@
 'use server';
 
-import axios from 'axios';
-import { generate4DigitCode } from '~/lib/utils';
-import type { FormState, SMSRuCodeCallResponse } from '~/types/common';
+import type { FormState } from '~/types/common';
 
-import { isValidPhoneNumber, parsePhoneNumber } from 'libphonenumber-js';
-import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { env } from '~/env';
+import { z } from 'zod';
 import { db } from '~/server/db';
 import { users, usersProfiles } from '~/server/db/schema';
 
-const SmsRuBaseUrl = 'https://sms.ru/code/call';
+const MAX_FILE_SIZE = 500000;
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
-export async function sendSmsWithCode(prevState: FormState, formData: FormData) {
-  const headersList = headers();
-  const telephone = (formData.get('telephone') as string) ?? '';
-
-  if (!isValidPhoneNumber(telephone)) {
-    return { message: 'Неправильный номер!', isSuccessful: false };
-  }
-
-  const phoneNumber = parsePhoneNumber(telephone, 'RU');
-
-  if (phoneNumber.country !== 'RU') {
-    return { message: 'Введите номер в Российском формате!', isSuccessful: false };
-  }
-
-  let userId: string | undefined;
-
-  try {
-    // const code = generate4DigitCode();
-    // отправка сообщения с кодом
-    const smsResponse = await axios.get<SMSRuCodeCallResponse>(SmsRuBaseUrl, {
-      params: {
-        api_id: env.SMS_RU_TOKEN,
-        phone: phoneNumber.formatInternational(),
-        ip: '94.25.168.131'
-        // msg: code,
-        // json: 1,
-        // test: 1
-      }
-    });
-    const code = String(smsResponse.data.code);
-    console.log(smsResponse.data);
-
-    if (smsResponse.data.status !== 'OK') {
-      return { ...prevState, message: smsResponse.data.status_text, isSuccessful: false };
-    }
-
-    const insertedUsers = await db
-      .insert(users)
-      .values({ otp: code, phoneNumber: phoneNumber.formatInternational() })
-      .onConflictDoUpdate({
-        target: users.phoneNumber,
-        set: { otp: code }
-      })
-      .returning({ userId: users.id });
-    userId = insertedUsers[0]?.userId;
-
-    if (!userId) {
-      return {
-        ...prevState,
-        message: 'Не удалось создать пользователя, повторите попытку',
-        isSuccessful: false
-      };
-    }
-    await db.insert(usersProfiles).values({ userId: userId }).onConflictDoNothing();
-  } catch (e) {
-    return { ...prevState, message: 'Не удалось отправить смс', isSuccessful: false };
-  }
-  redirect('/auth/' + userId);
-}
-
-export async function sendSmsWithCodeAgain(userId: string) {
-  const user = await db.query.users.findFirst({
-    where: (users, { eq }) => eq(users.id, userId)
+export async function createUser(prevState: FormState, formData: FormData) {
+  const schema = z.object({
+    userId: z.number(),
+    name: z.string(),
+    position: z.string(),
+    description: z.string(),
+    image: z
+      .instanceof(File)
+      .refine((file) => file?.size ?? 0 <= MAX_FILE_SIZE, `Max file size is 5MB.`)
+      .refine((file) => {
+        if (!file.size) return true;
+        return ACCEPTED_IMAGE_TYPES.includes(file?.type ?? '');
+      }, '.jpg, .jpeg, .png and .webp files are accepted.')
   });
 
-  if (!user?.phoneNumber) {
-    throw new Error('Пользователь не найден');
+  const parse = schema.safeParse({
+    userId: formData.get('userId'),
+    name: formData.get('name'),
+    position: formData.get('position'),
+    description: formData.get('description'),
+    image: formData.get('image')
+  });
+  if (!parse.success) {
+    const message = Object.values(parse.error.flatten().fieldErrors).join('; ') ?? '';
+    return { message, isSuccessful: false };
+  }
+
+  const { userId, name, position, description, image } = parse.data;
+  console.log(userId);
+
+  try {
+    await db.insert(users).values({ id: userId, name }).onConflictDoUpdate({
+      set: { name },
+      target: users.id
+    });
+  } catch (e) {
+    return { message: 'Не удалось обновить данные пользователя', isSuccessful: false };
   }
 
   try {
-    const code = generate4DigitCode();
-    // отправка сообщения с кодом
-    const smsResponse = await axios.get<SMSRuCodeCallResponse>(SmsRuBaseUrl, {
-      params: {
-        api_id: env.SMS_RU_TOKEN,
-        to: user.phoneNumber,
-        msg: code,
-        json: 1,
-        test: 1
-      }
+    await db.insert(usersProfiles).values({ userId, position, description }).onConflictDoUpdate({
+      set: { position, description },
+      target: usersProfiles.userId
     });
-
-    if (smsResponse.data.status !== 'OK') {
-      throw new Error('Не удалось отправить смс повторите попытку позже.');
-    }
-
-    await db
-      .insert(users)
-      .values({ id: userId, otp: code })
-      .onConflictDoUpdate({
-        target: users.id,
-        set: { otp: code }
-      });
   } catch (e) {
-    throw new Error('Не удалось отправить смс повторите попытку позже.');
+    return { message: 'Не удалось обновить данные профиля', isSuccessful: false };
   }
-  redirect('/auth/' + userId);
+
+  redirect('/profile/' + userId);
 }

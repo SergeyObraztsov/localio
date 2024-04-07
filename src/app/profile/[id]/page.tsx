@@ -6,7 +6,7 @@ import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import type { UserSpot } from '~/types/common';
-import SignOutButton from '../sign-out-button';
+import TelegramInput from './telegram-input';
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -52,13 +52,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
         <div className="flex flex-col gap-4 px-4">
           <h2 className="font-bold">Контакты в других соцсетях</h2>
           <div className="overflow-hidden rounded-lg">
-            <Input
-              type="text"
-              readOnly
-              className="rounded-none border-b border-b-white/10"
-              label="Телеграм"
-              value={'@' + (user?.usersProfile?.telegramUsername ?? '')}
-            />
+            <TelegramInput />
             <Input
               type="text"
               readOnly
@@ -68,9 +62,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
             />
           </div>
         </div>
-        <div className="px-4 pb-4">
-          <SignOutButton />
-        </div>
+        <div className="px-4 pb-4">{/* <SignOutButton /> */}</div>
       </main>
     </div>
   );

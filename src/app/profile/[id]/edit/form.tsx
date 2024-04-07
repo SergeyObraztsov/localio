@@ -1,9 +1,10 @@
 'use client';
 import { Label } from '@radix-ui/react-label';
+import WebApp from '@twa-dev/sdk';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useRef } from 'react';
+import { useState } from 'react';
 import { useFormState } from 'react-dom';
 import { editUserProfile } from '~/actions/user-actions';
 import SpotCardEdit from '~/components/spot-cards-edit';
@@ -22,8 +23,9 @@ type FormProps = { user: User; spots: UserSpot[] };
 export default function Form({ user, spots }: FormProps) {
   const { id } = useParams<{ id: string }>();
   const [state, formAction] = useFormState(editUserProfile, initialState);
-  const avatarInputRef = useRef<HTMLInputElement | null>(null);
-  const avatarFile = avatarInputRef.current?.files?.[0];
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const telegramUser = WebApp.initDataUnsafe.user;
+
   return (
     <form className="relative flex h-full min-h-dvh flex-col gap-6 p-4" action={formAction}>
       <input name="userId" defaultValue={id} hidden />
@@ -50,7 +52,13 @@ export default function Form({ user, spots }: FormProps) {
           />
           <p className="text-sm font-normal">Изменить фото</p>
         </Label>
-        <Input ref={avatarInputRef} type="file" id="image" name="image" className="hidden" />
+        <Input
+          onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
+          type="file"
+          id="image"
+          name="image"
+          className="hidden"
+        />
       </div>
 
       <div className="overflow-hidden rounded-lg">
@@ -84,7 +92,7 @@ export default function Form({ user, spots }: FormProps) {
         <Input
           className="rounded-none border-b border-b-white/10"
           type="text"
-          defaultValue={'@' + (user?.usersProfile?.telegramUsername ?? '')}
+          defaultValue={'@' + (telegramUser?.username ?? '')}
           readOnly
           label="Телеграм"
         />

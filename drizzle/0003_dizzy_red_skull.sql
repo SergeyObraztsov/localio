@@ -1,1 +1,0 @@
-ALTER TABLE "spot_types" ADD COLUMN "title" varchar(256);

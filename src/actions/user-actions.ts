@@ -1,55 +1,26 @@
 'use server';
 import { eq } from 'drizzle-orm';
-import fs from 'fs';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import type { FormState, UserCreateData } from '~/types/common';
+import type { FormState } from '~/types/common';
 import { db } from '../server/db/index';
 import { users, usersProfiles } from '../server/db/schema';
 
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
-export async function createUser(user: UserCreateData) {
-  return await db.insert(users).values({
-    phoneNumber: user.phoneNumber
-  });
-}
-
-// export async function createUserOrUpdate(user: TelegramUserData) {
-//   return await db
-//     .insert(users)
-//     .values({
-//       id: String(user.id),
-//       firstName: user.first_name,
-//       lastName: user.last_name,
-//       image: user.photo_url
-//     })
-//     .onConflictDoUpdate({
-//       target: users.id,
-//       set: {
-//         firstName: user.first_name,
-//         lastName: user.last_name,
-//         image: user.photo_url
-//       }
-//     });
-// }
-
-export async function getUserProfile(userId: string) {
+export async function getUserProfile(userId: number) {
   return await db.query.users.findFirst({
     with: {
       usersProfile: {
         columns: {
           description: true,
-          position: true,
-          telegramUsername: true
+          position: true
         }
       }
     },
     columns: {
-      createdAt: false,
-      emailVerified: false,
-      otp: false
+      createdAt: false
     },
     where(users, { eq }) {
       return eq(users.id, userId);
@@ -57,7 +28,7 @@ export async function getUserProfile(userId: string) {
   });
 }
 
-export async function getUserSpots(userId: string) {
+export async function getUserSpots(userId: number) {
   return await db.query.spotSubscriptions.findMany({
     with: {
       spot: {
@@ -80,18 +51,6 @@ export async function getUserSpots(userId: string) {
     },
     where(spotSubscriptions, { eq }) {
       return eq(spotSubscriptions.userId, userId);
-    }
-  });
-}
-
-export async function getTelegramData(userId: string) {
-  return await db.query.usersProfiles.findFirst({
-    columns: {
-      telegramChatId: true,
-      telegramUsername: true
-    },
-    where(usersProfiles, { eq }) {
-      return eq(usersProfiles.userId, userId);
     }
   });
 }
@@ -130,24 +89,27 @@ export async function getSpot(spotId: string) {
   });
 }
 
-export const deleteUser = async (id: string) => {
+export const deleteUser = async (id: number) => {
   await db.delete(users).where(eq(users.id, id));
 };
 
 export async function editUserProfile(prevState: FormState, formData: FormData) {
   const schema = z.object({
-    userId: z.string(),
+    userId: z.number(),
     name: z.string(),
     position: z.string(),
     email: z.string().nullable(),
     description: z.string(),
     image: z
       .instanceof(File)
-      .refine((file) => file?.size ?? 0 <= MAX_FILE_SIZE, `Max file size is 5MB.`)
-      .refine(
-        (file) => ACCEPTED_IMAGE_TYPES.includes(file?.type ?? ''),
-        '.jpg, .jpeg, .png and .webp files are accepted.'
-      )
+      .refine((file) => {
+        if (!file.size) return true;
+        return file?.size ?? 0 <= MAX_FILE_SIZE;
+      }, `Max file size is 5MB. `)
+      .refine((file) => {
+        if (!file.size) return true;
+        return ACCEPTED_IMAGE_TYPES.includes(file?.type ?? '');
+      }, '.jpg, .jpeg, .png and .webp files are accepted.')
   });
 
   const parse = schema.safeParse({
@@ -196,20 +158,9 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
       })
       .where(eq(usersProfiles.userId, userId));
   } catch (e) {
+    console.log(e);
     return { message: 'Не удалось обновить данные профиля', isSuccessful: false };
   }
 
   redirect('/profile/' + userId);
-}
-
-async function bufferFromFile(filePath: string): Promise<Buffer> {
-  return new Promise<Buffer>((resolve, reject) => {
-    fs.readFile(filePath, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(data);
-      }
-    });
-  });
 }
