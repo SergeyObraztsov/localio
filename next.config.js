@@ -13,7 +13,7 @@ const config = {
         hostname: '**'
       },
     ],
-  },
+  }
 };
 
 export default config;

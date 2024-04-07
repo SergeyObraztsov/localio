@@ -10,8 +10,8 @@ import TelegramInput from './telegram-input';
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
   const id = params.id;
-  const user = await getUserProfile(id);
-  const spots = await getUserSpots(id);
+  const user = await getUserProfile(Number(id));
+  const spots = await getUserSpots(Number(id));
   return (
     <div className="relative flex h-full min-h-dvh flex-shrink flex-col">
       <header className="absolute left-0 top-4 z-10 flex w-full justify-between px-4">
