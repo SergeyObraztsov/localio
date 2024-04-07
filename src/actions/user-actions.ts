@@ -1,13 +1,22 @@
 'use server';
-import { eq } from 'drizzle-orm';
-import { redirect } from 'next/navigation';
+import { and, eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import type { FormState } from '~/types/common';
 import { db } from '../server/db/index';
-import { users, usersProfiles } from '../server/db/schema';
+import { spotSubscriptions, users, usersProfiles } from '../server/db/schema';
 
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+
+export async function isUserCreated(userId: number) {
+  const user = await db.query.users.findFirst({
+    where(users, { eq }) {
+      return eq(users.id, userId);
+    }
+  });
+  return !!user;
+}
 
 export async function getUserProfile(userId: number) {
   return await db.query.users.findFirst({
@@ -95,10 +104,11 @@ export const deleteUser = async (id: number) => {
 
 export async function editUserProfile(prevState: FormState, formData: FormData) {
   const schema = z.object({
-    userId: z.number(),
+    userId: z.string(),
     name: z.string(),
     position: z.string(),
     email: z.string().nullable(),
+    phoneNumber: z.string().nullable(),
     description: z.string(),
     image: z
       .instanceof(File)
@@ -118,6 +128,7 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
     position: formData.get('position'),
     email: formData.get('email'),
     description: formData.get('description'),
+    phoneNumber: formData.get('phone'),
     image: formData.get('image')
   });
 
@@ -126,7 +137,7 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
     return { message, isSuccessful: false };
   }
 
-  const { userId, name, position, email, description, image } = parse.data;
+  const { userId, name, position, email, description, phoneNumber, image } = parse.data;
 
   try {
     // const imageBuffer = image ? await bufferFromFile(image) : null;
@@ -141,9 +152,10 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
       .update(users)
       .set({
         name,
-        email
+        email,
+        phoneNumber
       })
-      .where(eq(users.id, userId));
+      .where(eq(users.id, Number(userId)));
   } catch (e) {
     console.log(e);
     return { message: 'Не удалось обновить данные пользователя', isSuccessful: false };
@@ -156,11 +168,18 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
         position,
         description
       })
-      .where(eq(usersProfiles.userId, userId));
+      .where(eq(usersProfiles.userId, Number(userId)));
   } catch (e) {
     console.log(e);
     return { message: 'Не удалось обновить данные профиля', isSuccessful: false };
   }
-
-  redirect('/profile/' + userId);
+  revalidatePath('/profile/' + userId);
+  return { message: 'Профиль успешно обновлен.', isSuccessful: true };
 }
+
+export const exitFromSpot = async (userId: number, spotId: string) => {
+  await db
+    .delete(spotSubscriptions)
+    .where(and(eq(spotSubscriptions.userId, userId), eq(spotSubscriptions.spotId, spotId)));
+  revalidatePath(`/spot/${spotId}`);
+};

@@ -2,15 +2,15 @@
 import WebApp from '@twa-dev/sdk';
 import { BackButton } from '@twa-dev/sdk/react';
 import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { useFormState } from 'react-dom';
-import { editUserProfile } from '~/actions/user-actions';
+import { createUser } from '~/actions/auth-actions';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
 import type { FormState } from '~/types/common';
-import SubmitButton from '../../submit-button';
+import SubmitButton from '../submit-button';
 
 const initialState: FormState = {
   message: '',
@@ -19,9 +19,7 @@ const initialState: FormState = {
 
 export default function ProfilePage() {
   const router = useRouter();
-  const { userId } = useParams<{ userId: string }>();
 
-  const [state, formAction] = useFormState(editUserProfile, initialState);
   const formRef = useRef<HTMLFormElement>(null);
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
@@ -29,13 +27,22 @@ export default function ProfilePage() {
   const telegramUser = WebApp.initDataUnsafe.user;
   const hasPhoto = !!telegramUser?.photo_url || !!avatarFile;
 
+  const createUserHandler = async (prevState: FormState, formData: FormData) => {
+    const result = await createUser(prevState, formData);
+    if (result.isSuccessful) {
+      router.back();
+    }
+    return result;
+  };
+  const [state, formAction] = useFormState(createUserHandler, initialState);
+
   return (
     <form
       ref={formRef}
       className="relative flex h-full min-h-svh flex-shrink flex-col gap-4 p-4"
       action={formAction}
     >
-      <input name="userId" defaultValue={userId} hidden />
+      <input name="userId" defaultValue={telegramUser?.id} hidden />
       <BackButton onClick={() => router.back()} />
       {/* <div className="flex w-full justify-between">
         <Button variant="ghost" size="icon" className="text-4xl" asChild>

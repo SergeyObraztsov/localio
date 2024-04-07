@@ -21,7 +21,7 @@ import {
 export const createTable = pgTableCreator((name) => name);
 
 export const users = createTable('user', {
-  id: integer('id').primaryKey().notNull(),
+  id: integer('id').unique().primaryKey().notNull(),
   name: varchar('name', { length: 256 }),
   phoneNumber: varchar('phone_number', { length: 256 }).unique(),
   email: varchar('email', { length: 256 }).unique(),
@@ -36,8 +36,10 @@ export const usersRelations = relations(users, ({ one }) => ({
 }));
 
 export const usersProfiles = createTable('user_profile', {
-  id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id),
+  id: serial('id').primaryKey().unique(),
+  userId: integer('user_id')
+    .references(() => users.id)
+    .unique(),
   position: varchar('position', { length: 256 }),
   description: text('description')
 });
@@ -47,7 +49,7 @@ export const profileRelations = relations(usersProfiles, ({ one }) => ({
 }));
 
 export const spots = createTable('spot', {
-  id: uuid('id').defaultRandom().primaryKey().notNull(),
+  id: uuid('id').defaultRandom().primaryKey().unique().notNull(),
   name: varchar('name', { length: 256 }),
   description: text('description'),
   location: varchar('location'),

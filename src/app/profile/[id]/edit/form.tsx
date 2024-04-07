@@ -3,7 +3,7 @@ import { Label } from '@radix-ui/react-label';
 import WebApp from '@twa-dev/sdk';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
 import { editUserProfile } from '~/actions/user-actions';
@@ -21,17 +21,25 @@ const initialState: FormState = {
 type FormProps = { user: User; spots: UserSpot[] };
 
 export default function Form({ user, spots }: FormProps) {
-  const { id } = useParams<{ id: string }>();
-  const [state, formAction] = useFormState(editUserProfile, initialState);
+  const router = useRouter();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const telegramUser = WebApp.initDataUnsafe.user;
 
+  const editUserHandler = async (prevState: FormState, formData: FormData) => {
+    const result = await editUserProfile(prevState, formData);
+    if (result.isSuccessful) {
+      router.push(`/profile/${telegramUser?.id}`);
+    }
+    return result;
+  };
+
+  const [state, formAction] = useFormState(editUserHandler, initialState);
   return (
     <form className="relative flex h-full min-h-dvh flex-col gap-6 p-4" action={formAction}>
-      <input name="userId" defaultValue={id} hidden />
+      <input name="userId" defaultValue={telegramUser?.id} hidden />
       <header className="flex w-full justify-between">
         <Button variant="ghost" size="sm" className="text-sm font-normal" asChild>
-          <Link href={`/profile/${id}`}>Отмена</Link>
+          <Link href={`/profile/${telegramUser?.id}`}>Отмена</Link>
         </Button>
         <Button type="submit" variant="ghost" size="sm" className="rounded-full text-sm font-bold">
           Готово
@@ -100,7 +108,7 @@ export default function Form({ user, spots }: FormProps) {
           className="rounded-none border-b border-b-white/10"
           type="text"
           defaultValue={user?.phoneNumber ?? ''}
-          readOnly
+          name="phone"
           label="Мобильный"
         />
         <Input
