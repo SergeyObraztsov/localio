@@ -5,6 +5,7 @@ import type { UserSpot } from '~/types/common';
 // Import Swiper styles
 import Link from 'next/link';
 import 'swiper/css';
+import { getImageUrl } from '~/lib/utils';
 
 export default function SpotCardList({ list }: { list: UserSpot[] }) {
   return (
@@ -24,7 +25,13 @@ function SpotCard({ item }: { item: UserSpot }) {
   return (
     <Link href={`/spot/${item.spot.id}`}>
       <div className="flex h-32 flex-col items-center justify-center rounded-lg bg-white/10 px-2 py-4">
-        <Image src={item.spot.types.image ?? ''} alt="" width={48} height={48} className="pt-2" />
+        <Image
+          src={getImageUrl(item.spot.types.image)}
+          alt=""
+          width={48}
+          height={48}
+          className="pt-2"
+        />
         <h3 className="mt-auto text-sm font-bold">{item.spot.name}</h3>
       </div>
     </Link>

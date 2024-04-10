@@ -1,11 +1,11 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import { getUserProfile, getUserSpots } from '~/actions/user-actions';
 import SpotCardList from '~/components/spot-cards-list';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
-import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
+import { getImageUrl } from '~/lib/utils';
 import type { UserSpot } from '~/types/common';
+import ProfileHeader from './profile-header';
 import TelegramInput from './telegram-input';
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
@@ -14,23 +14,11 @@ export default async function ProfilePage({ params }: { params: { id: string } }
   const spots = await getUserSpots(Number(id));
   return (
     <div className="relative flex h-full min-h-dvh flex-shrink flex-col">
-      <header className="absolute left-0 top-4 z-10 flex w-full justify-between px-4">
-        <Button
-          variant="transparent"
-          className="rounded-full text-3xl font-light"
-          size="icon"
-          asChild
-        >
-          <Link href="/">&#8249;</Link>
-        </Button>
-        <Button variant="transparent" size="sm" className="rounded-full" asChild>
-          <Link href={`/profile/${id}/edit`}>Редактировать</Link>
-        </Button>
-      </header>
+      <ProfileHeader />
 
       <AspectRatio ratio={1} className="relative w-full bg-white/10">
         <Image
-          src={user?.image ?? ''}
+          src={getImageUrl(user?.image)}
           alt=""
           draggable={false}
           className="object-cover"

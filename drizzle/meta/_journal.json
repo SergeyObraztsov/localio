@@ -15,6 +15,13 @@
       "when": 1712519479994,
       "tag": "0001_fine_dormammu",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1712781589990,
+      "tag": "0002_perpetual_quasimodo",
+      "breakpoints": true
     }
   ]
 }

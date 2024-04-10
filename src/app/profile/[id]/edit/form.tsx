@@ -1,6 +1,4 @@
 'use client';
-import { Label } from '@radix-ui/react-label';
-import WebApp from '@twa-dev/sdk';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -8,9 +6,13 @@ import { useState } from 'react';
 import { useFormState } from 'react-dom';
 import { editUserProfile } from '~/actions/user-actions';
 import SpotCardEdit from '~/components/spot-cards-edit';
+import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
+import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
+import useUser from '~/lib/hooks';
+import { getImageUrl } from '~/lib/utils';
 import type { FormState, User, UserSpot } from '~/types/common';
 
 const initialState: FormState = {
@@ -22,11 +24,14 @@ type FormProps = { user: User; spots: UserSpot[] };
 
 export default function Form({ user, spots }: FormProps) {
   const router = useRouter();
+  const telegramUser = useUser();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const telegramUser = WebApp.initDataUnsafe.user;
+  const [isChanging, setChanging] = useState(false);
 
   const editUserHandler = async (prevState: FormState, formData: FormData) => {
+    setChanging(true);
     const result = await editUserProfile(prevState, formData);
+    setChanging(false);
     if (result.isSuccessful) {
       router.push(`/profile/${telegramUser?.id}`);
     }
@@ -38,30 +43,45 @@ export default function Form({ user, spots }: FormProps) {
     <form className="relative flex h-full min-h-dvh flex-col gap-6 p-4" action={formAction}>
       <input name="userId" defaultValue={telegramUser?.id} hidden />
       <header className="flex w-full justify-between">
-        <Button variant="ghost" size="sm" className="text-sm font-normal" asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className="text-sm font-normal"
+          disabled={isChanging}
+          asChild
+        >
           <Link href={`/profile/${telegramUser?.id}`}>Отмена</Link>
         </Button>
-        <Button type="submit" variant="ghost" size="sm" className="rounded-full text-sm font-bold">
+        <Button
+          type="submit"
+          variant="ghost"
+          size="sm"
+          className="rounded-full text-sm font-bold"
+          disabled={isChanging}
+        >
           Готово
         </Button>
       </header>
 
       <div className="flex w-full flex-col items-center justify-center">
         <Label htmlFor="image" className="flex flex-col items-center justify-center gap-2">
-          <Image
-            className="overflow-hidden rounded-full object-cover"
-            src={avatarFile ? URL.createObjectURL(avatarFile) : user?.image ?? ''}
-            width={100}
-            height={100}
-            alt=""
-            draggable={false}
-            loading="eager"
-            quality={100}
-          />
+          <AspectRatio ratio={1}>
+            <Image
+              className="overflow-hidden rounded-full object-cover"
+              src={avatarFile ? URL.createObjectURL(avatarFile) : getImageUrl(user?.image)}
+              width={100}
+              height={100}
+              alt=""
+              draggable={false}
+              loading="eager"
+              quality={100}
+            />
+          </AspectRatio>
           <p className="text-sm font-normal">Изменить фото</p>
         </Label>
         <Input
           onChange={(e) => setAvatarFile(e.target.files?.[0] ?? null)}
+          disabled={isChanging}
           type="file"
           id="image"
           name="image"
@@ -72,6 +92,7 @@ export default function Form({ user, spots }: FormProps) {
       <div className="overflow-hidden rounded-lg">
         <Input
           className="rounded-none border-b border-b-white/10"
+          disabled={isChanging}
           type="text"
           defaultValue={user?.name ?? ''}
           name="name"
@@ -79,6 +100,7 @@ export default function Form({ user, spots }: FormProps) {
         />
         <Input
           className="rounded-none"
+          disabled={isChanging}
           type="text"
           defaultValue={user?.usersProfile?.position ?? ''}
           name="position"
@@ -100,7 +122,7 @@ export default function Form({ user, spots }: FormProps) {
         <Input
           className="rounded-none border-b border-b-white/10"
           type="text"
-          defaultValue={'@' + (telegramUser?.username ?? '')}
+          defaultValue={'@' + user.telegramUsername ?? ''}
           readOnly
           label="Телеграм"
         />
@@ -108,6 +130,7 @@ export default function Form({ user, spots }: FormProps) {
           className="rounded-none border-b border-b-white/10"
           type="text"
           defaultValue={user?.phoneNumber ?? ''}
+          disabled={isChanging}
           name="phone"
           label="Мобильный"
         />
@@ -115,12 +138,14 @@ export default function Form({ user, spots }: FormProps) {
           className="rounded-none border-b border-b-white/10"
           type="text"
           defaultValue={user?.email ?? ''}
+          disabled={isChanging}
           name="email"
           label="Э-почта"
         />
         <Textarea
           className="resize-none rounded-none"
           name="description"
+          disabled={isChanging}
           label="О себе"
           maxLength={500}
         />

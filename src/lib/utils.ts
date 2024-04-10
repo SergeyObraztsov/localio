@@ -1,4 +1,4 @@
-import { type ClassValue, clsx } from 'clsx';
+import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
@@ -11,4 +11,18 @@ export function generate4DigitCode() {
 
   // Pad the number with leading zeros if necessary to ensure 4 digits
   return randomNumber.toString().padStart(4, '0');
+}
+
+export function getImageUrl(fileName?: string | null) {
+  if (!fileName) return '';
+  return '/api/static?fileName=' + fileName;
+}
+
+export function morph(amount: number, array: string[]) {
+  const index: number =
+    amount % 100 > 4 && amount % 100 < 20
+      ? 2
+      : [2, 0, 1, 1, 1, 2][amount % 10 < 5 ? amount % 10 : 5]!;
+
+  return array[index];
 }

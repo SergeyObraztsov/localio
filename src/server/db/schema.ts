@@ -25,6 +25,7 @@ export const users = createTable('user', {
   name: varchar('name', { length: 256 }),
   phoneNumber: varchar('phone_number', { length: 256 }).unique(),
   email: varchar('email', { length: 256 }).unique(),
+  telegramUsername: varchar('telegram_username').unique(),
   image: varchar('image'),
   createdAt: timestamp('created_at')
     .default(sql`CURRENT_TIMESTAMP`)

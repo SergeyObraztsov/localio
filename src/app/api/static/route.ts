@@ -1,3 +1,4 @@
+import { env } from '~/env';
 import { minioClient } from '~/server/minio';
 
 async function getFileFromBucket({
@@ -16,11 +17,17 @@ async function getFileFromBucket({
   return await minioClient.getObject(bucketName, fileName);
 }
 
-export async function GET() {
-  // get the file from the bucket and pipe it to the response object
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const fileName = searchParams.get('fileName');
+
+  if (!fileName) {
+    return new Response('Item not found', { status: 404 });
+  }
+
   const data = await getFileFromBucket({
-    bucketName: 'main',
-    fileName: 'Альберт Геворкян.png'
+    bucketName: env.S3_BUCKET_NAME,
+    fileName
   });
 
   if (!data) {

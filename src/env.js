@@ -19,6 +19,7 @@ export const env = createEnv({
       .default("development"),
     S3_API_SECRET_TOKEN: z.string(),
     S3_API_ACCESS_TOKEN: z.string(),
+    S3_BUCKET_NAME: z.string(),
     SERVER_URL: z.string(),
   },
 
@@ -40,7 +41,8 @@ export const env = createEnv({
     NODE_ENV: process.env.NODE_ENV,
     S3_API_SECRET_TOKEN: process.env.S3_API_SECRET_TOKEN,
     S3_API_ACCESS_TOKEN: process.env.S3_API_ACCESS_TOKEN,
-    SERVER_URL: process.env.SERVER_URL
+    SERVER_URL: process.env.SERVER_URL,
+    S3_BUCKET_NAME: process.env.S3_BUCKET_NAME
     // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
   },
   /**

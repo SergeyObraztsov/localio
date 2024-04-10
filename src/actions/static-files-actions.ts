@@ -1,5 +1,6 @@
+import { nanoid } from 'nanoid';
+import { env } from '~/env';
 import { minioClient } from '~/server/minio';
-
 // Disable body parser built-in to Next.js to allow formidable to work
 export const config = {
   api: {
@@ -7,25 +8,21 @@ export const config = {
   }
 };
 
-export async function saveFileInBucket({
-  bucketName,
-  fileName,
-  file
-}: {
-  bucketName: string;
-  fileName: string;
-  file: Buffer;
-}) {
-  const fileExists = await checkFileExistsInBucket({
-    bucketName,
-    fileName
-  });
+export async function saveFileInBucket(file: File) {
+  const imageBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(imageBuffer);
+  const fileName = `${nanoid(10)}-${file.name}`;
+  // const fileExists = await checkFileExistsInBucket({
+  //   bucketName: env.S3_BUCKET_NAME,
+  //   fileName
+  // });
 
-  if (fileExists) {
-    throw new Error('File already exists');
-  }
+  // if (fileExists) {
+  //   throw new Error('File already exists');
+  // }
 
-  await minioClient.putObject(bucketName, fileName, file);
+  await minioClient.putObject(env.S3_BUCKET_NAME, fileName, buffer);
+  return fileName;
 }
 
 export async function checkFileExistsInBucket({

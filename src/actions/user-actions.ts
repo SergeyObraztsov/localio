@@ -5,17 +5,17 @@ import { z } from 'zod';
 import type { FormState } from '~/types/common';
 import { db } from '../server/db/index';
 import { spotSubscriptions, users, usersProfiles } from '../server/db/schema';
+import { saveFileInBucket } from './static-files-actions';
 
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
 
-export async function isUserCreated(userId: number) {
-  const user = await db.query.users.findFirst({
+export async function getUser(userId: number) {
+  return await db.query.users.findFirst({
     where(users, { eq }) {
       return eq(users.id, userId);
     }
   });
-  return !!user;
 }
 
 export async function getUserProfile(userId: number) {
@@ -138,22 +138,23 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
   }
 
   const { userId, name, position, email, description, phoneNumber, image } = parse.data;
+  let fileName;
 
   try {
-    // const imageBuffer = image ? await bufferFromFile(image) : null;
-    // if (imageBuffer) {
-    //   await saveFileInBucket({
-    //     bucketName: 'main',
-    //     fileName: image?.name ?? '',
-    //     file: imageBuffer
-    //   });
-    // }
+    fileName = await saveFileInBucket(image);
+  } catch (e) {
+    console.log(e);
+    return { message: 'Не удалось загрузить изображаение', isSuccessful: false };
+  }
+
+  try {
     await db
       .update(users)
       .set({
         name,
         email,
-        phoneNumber
+        phoneNumber,
+        image: fileName
       })
       .where(eq(users.id, Number(userId)));
   } catch (e) {
@@ -181,5 +182,10 @@ export const exitFromSpot = async (userId: number, spotId: string) => {
   await db
     .delete(spotSubscriptions)
     .where(and(eq(spotSubscriptions.userId, userId), eq(spotSubscriptions.spotId, spotId)));
+  revalidatePath(`/spot/${spotId}`);
+};
+
+export const enterSpot = async (userId: number, spotId: string) => {
+  await db.insert(spotSubscriptions).values({ userId, spotId });
   revalidatePath(`/spot/${spotId}`);
 };

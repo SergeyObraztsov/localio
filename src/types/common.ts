@@ -62,6 +62,7 @@ export type User = {
   id: number;
   image: string | null;
   phoneNumber: string | null;
+  telegramUsername: string | null;
   usersProfile: {
     description: string | null;
     position: string | null;

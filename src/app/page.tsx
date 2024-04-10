@@ -14,16 +14,12 @@ export default function Page() {
 
   return (
     <>
-      <BackButton
-        onClick={() =>
-          WebApp.showPopup({ title: 'А как же нетворкинг?', message: 'не уходи дорогой' }, () => {})
-        }
-      />
+      <BackButton onClick={() => router.push('/spot/40c676dc-7fa7-45a7-99d3-2fd094d88891')} />
       <MainButton
-        onClick={() => router.push('/spot/40c676dc-7fa7-45a7-99d3-2fd094d88891')}
+        onClick={() => WebApp.showScanQrPopup({}, () => {})}
         color="#00D021"
         textColor="#fff"
-        text={'Вперед'}
+        text={'Отсканировать QR'}
       />
     </>
   );

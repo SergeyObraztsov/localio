@@ -1,10 +1,10 @@
 'use client';
 
-import WebApp from '@twa-dev/sdk';
 import { Input } from '~/components/ui/input';
+import useUser from '~/lib/hooks';
 
 export default function TelegramInput() {
-  const telegramUser = WebApp.initDataUnsafe.user;
+  const telegramUser = useUser();
   return (
     <Input
       type="text"
