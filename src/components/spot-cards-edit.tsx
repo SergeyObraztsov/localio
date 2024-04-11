@@ -40,24 +40,18 @@ export default function SpotCardEdit({ list }: { list: UserSpot[] }) {
       </div>
       <Dialog open={!!deletingId}>
         <DialogPortal>
-          <DialogContent className="border-none bg-white/5">
+          <DialogContent className="max-w-[22rem] rounded-lg border-none bg-gray-dark">
             <DialogHeader>
               <DialogTitle>Вы уверены?</DialogTitle>
               <DialogDescription>Выйти со спота {deletingItem?.spot.name}?</DialogDescription>
             </DialogHeader>
-            <DialogFooter className="flex w-full justify-between">
-              <Button
-                onClick={() => setDeletingId(null)}
-                type="button"
-                variant="secondary"
-                disabled={isLoading}
-              >
+            <DialogFooter>
+              <Button onClick={() => setDeletingId(null)} variant="outline" disabled={isLoading}>
                 Отмена
               </Button>
 
               <Button
                 onClick={deleteSpotSubscriptionHandler}
-                type="button"
                 variant="destructive"
                 disabled={isLoading}
               >
