@@ -1,13 +1,13 @@
 'use client';
+import WebApp from '@twa-dev/sdk';
 import { BackButton } from '@twa-dev/sdk/react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { Button } from '~/components/ui/button';
-import useUser from '~/lib/hooks';
 
 export default function ProfileHeader() {
   const { id } = useParams<{ id: string }>();
-  const user = useUser();
+  const user = WebApp.initDataUnsafe?.user;
   const router = useRouter();
   const isMe = Number(id) === user?.id;
   return (

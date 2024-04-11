@@ -1,4 +1,5 @@
 'use client';
+import WebApp from '@twa-dev/sdk';
 import { BackButton } from '@twa-dev/sdk/react';
 import Image from 'next/image';
 import { useParams, useRouter } from 'next/navigation';
@@ -8,7 +9,6 @@ import { createUser } from '~/actions/auth-actions';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
-import useUser from '~/lib/hooks';
 import { getImageUrl } from '~/lib/utils';
 import type { FormState } from '~/types/common';
 import SubmitButton from '../../submit-button';
@@ -26,7 +26,7 @@ export default function ProfilePage() {
 
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
-  const telegramUser = useUser();
+  const telegramUser = WebApp.initDataUnsafe?.user;
   const hasPhoto = !!telegramUser?.photo_url || !!avatarFile;
 
   const createUserHandler = async (prevState: FormState, formData: FormData) => {
@@ -95,7 +95,6 @@ export default function ProfilePage() {
             id="image"
             name="image"
             className="hidden"
-            required
           />
         </div>
 

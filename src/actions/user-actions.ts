@@ -139,12 +139,13 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
 
   const { userId, name, position, email, description, phoneNumber, image } = parse.data;
   let fileName;
-
-  try {
-    fileName = await saveFileInBucket(image);
-  } catch (e) {
-    console.log(e);
-    return { message: 'Не удалось загрузить изображаение', isSuccessful: false };
+  if (image.size) {
+    try {
+      fileName = await saveFileInBucket(image);
+    } catch (e) {
+      console.log(e);
+      return { message: 'Не удалось загрузить изображаение', isSuccessful: false };
+    }
   }
 
   try {

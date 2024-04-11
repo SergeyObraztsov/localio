@@ -1,4 +1,5 @@
 'use client';
+import WebApp from '@twa-dev/sdk';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
@@ -10,12 +11,11 @@ import TelegramMainButton from '~/components/telegram-main-button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
-import useUser from '~/lib/hooks';
 import { getImageUrl } from '~/lib/utils';
 import type { Spot, User } from '~/types/common';
 
 export default function Spot({ spot }: { spot: Spot }) {
-  const user = useUser();
+  const user = WebApp.initDataUnsafe?.user;
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
 

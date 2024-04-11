@@ -4,6 +4,7 @@ import { getImageUrl } from '~/lib/utils';
 import type { UserSpot } from '~/types/common';
 import { Button } from './ui/button';
 
+import WebApp from '@twa-dev/sdk';
 import { useState } from 'react';
 import { exitFromSpot } from '~/actions/user-actions';
 import {
@@ -15,10 +16,9 @@ import {
   DialogPortal,
   DialogTitle
 } from '~/components/ui/dialog';
-import useUser from '~/lib/hooks';
 
 export default function SpotCardEdit({ list }: { list: UserSpot[] }) {
-  const user = useUser();
+  const user = WebApp.initDataUnsafe?.user;
   const [deletingId, setDeletingId] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 

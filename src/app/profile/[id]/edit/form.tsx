@@ -1,6 +1,6 @@
 'use client';
+import WebApp from '@twa-dev/sdk';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
@@ -11,7 +11,6 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
-import useUser from '~/lib/hooks';
 import { getImageUrl } from '~/lib/utils';
 import type { FormState, User, UserSpot } from '~/types/common';
 
@@ -24,7 +23,7 @@ type FormProps = { user: User; spots: UserSpot[] };
 
 export default function Form({ user, spots }: FormProps) {
   const router = useRouter();
-  const telegramUser = useUser();
+  const telegramUser = WebApp.initDataUnsafe?.user;
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isChanging, setChanging] = useState(false);
 
@@ -46,11 +45,12 @@ export default function Form({ user, spots }: FormProps) {
         <Button
           variant="ghost"
           size="sm"
+          type="button"
           className="text-sm font-normal"
           disabled={isChanging}
-          asChild
+          onClick={() => router.back()}
         >
-          <Link href={`/profile/${telegramUser?.id}`}>Отмена</Link>
+          Отмена
         </Button>
         <Button
           type="submit"
@@ -69,9 +69,8 @@ export default function Form({ user, spots }: FormProps) {
             <Image
               className="overflow-hidden rounded-full object-cover"
               src={avatarFile ? URL.createObjectURL(avatarFile) : getImageUrl(user?.image)}
-              width={100}
-              height={100}
               alt=""
+              fill
               draggable={false}
               loading="eager"
               quality={100}
@@ -122,13 +121,13 @@ export default function Form({ user, spots }: FormProps) {
         <Input
           className="rounded-none border-b border-b-white/10"
           type="text"
-          defaultValue={'@' + user.telegramUsername ?? ''}
+          defaultValue={user.telegramUsername ? '@' + user.telegramUsername : ''}
           readOnly
           label="Телеграм"
         />
         <Input
           className="rounded-none border-b border-b-white/10"
-          type="text"
+          type="phone"
           defaultValue={user?.phoneNumber ?? ''}
           disabled={isChanging}
           name="phone"
@@ -136,7 +135,7 @@ export default function Form({ user, spots }: FormProps) {
         />
         <Input
           className="rounded-none border-b border-b-white/10"
-          type="text"
+          type="email"
           defaultValue={user?.email ?? ''}
           disabled={isChanging}
           name="email"
@@ -145,6 +144,7 @@ export default function Form({ user, spots }: FormProps) {
         <Textarea
           className="resize-none rounded-none"
           name="description"
+          defaultValue={user.usersProfile?.description ?? ''}
           disabled={isChanging}
           label="О себе"
           maxLength={500}

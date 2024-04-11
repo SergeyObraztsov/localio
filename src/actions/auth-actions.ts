@@ -22,14 +22,15 @@ export async function createUser(prevState: FormState, formData: FormData) {
     username: z.string(),
     image: z
       .instanceof(File)
+      .refine((file) => !!file.size, `Загрузите фото`)
       .refine((file) => {
         if (!file.size) return true;
-        file?.size ?? 0 <= MAX_FILE_SIZE;
-      }, `Max file size is 5MB.`)
+        return file?.size ?? 0 <= MAX_FILE_SIZE;
+      }, `Максимальный размер фото 5MB.`)
       .refine((file) => {
         if (!file.size) return true;
         return ACCEPTED_IMAGE_TYPES.includes(file?.type ?? '');
-      }, '.jpg, .jpeg, .png and .webp files are accepted.')
+      }, '.jpg, .jpeg, .png and .webp форматы поддерживаются.')
   });
 
   const parse = schema.safeParse({
