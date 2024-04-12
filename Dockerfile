@@ -33,16 +33,23 @@ ENV PORT 3000
 ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
+ARG NODE_ENV
+ARG DATABASE_URL
+ARG SERVER_URL
+ARG S3_API_SECRET_TOKEN
+ARG S3_API_ACCESS_TOKEN
+ARG S3_BUCKET_NAME
+
 RUN addgroup -g 1001 -S nodejs
 RUN adduser -S nextjs -u 1001
 
 COPY --from=build /localio/package.json ./package.json
 COPY --from=build /localio/node_modules ./node_modules
 
-COPY --from=build /localio/packages/landing/next.config.js ./packages/landing/next.config.js
+COPY --from=build /localio/next.config.js ./next.config.js
 
-COPY --from=build /localio/packages/landing/public ./packages/landing/public
-COPY --from=build --chown=nextjs:nodejs /localio/packages/landing/.next ./packages/landing/.next
+COPY --from=build /localio/public ./public
+COPY --from=build --chown=nextjs:nodejs /localio/.next ./.next
 
 USER nextjs
 
