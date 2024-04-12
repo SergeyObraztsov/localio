@@ -91,7 +91,7 @@ export default function Spot({ spot }: { spot: Spot }) {
         />
       </AspectRatio>
 
-      <PeopleList list={spot?.subscriptions ?? []} isBlurred={!userData} />
+      <PeopleList list={spot?.subscriptions ?? []} authtorized={!userData} />
 
       <div className="flex-1" />
 

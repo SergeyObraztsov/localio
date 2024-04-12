@@ -1,15 +1,22 @@
-import Link from 'next/link';
+'use client';
+import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { cn, getImageUrl, morph } from '~/lib/utils';
 import type { SpotSubscription, SpotUser } from '~/types/common';
 
 export default function PeopleList({
   list,
-  isBlurred
+  authtorized
 }: {
   list: SpotSubscription[];
-  isBlurred?: boolean;
+  authtorized?: boolean;
 }) {
+  const router = useRouter();
+  const clickHandler = (id: number) => {
+    if (!authtorized) return;
+    router.push(`/profile/${id}`);
+  };
+
   return (
     <div>
       <p className="font-bold">
@@ -19,29 +26,40 @@ export default function PeopleList({
         {list
           .filter((item) => !!item.user)
           .map((item) => (
-            <PeopleListItem key={item.id} item={item.user!} isBlurred={isBlurred} />
+            <PeopleListItem
+              key={item.id}
+              item={item.user!}
+              authtorized={authtorized}
+              onClick={() => clickHandler(item.id)}
+            />
           ))}
       </ul>
     </div>
   );
 }
 
-function PeopleListItem({ item, isBlurred }: { item: SpotUser; isBlurred?: boolean }) {
+function PeopleListItem({
+  item,
+  authtorized,
+  onClick
+}: {
+  item: SpotUser;
+  authtorized?: boolean;
+  onClick: () => void;
+}) {
   const name = item.name ?? '';
   return (
-    <li>
-      <Link href={`/profile/${item.id}`} className="flex items-center gap-4">
-        <Avatar className={cn(isBlurred && 'blur-sm')}>
-          <AvatarImage src={getImageUrl(item.image)} />
-          <AvatarFallback>{name.charAt(0)}</AvatarFallback>
-        </Avatar>
-        <div className="flex w-full flex-col gap-1 border-b border-white/10 py-3">
-          <p className={cn('select-none text-sm font-semibold', isBlurred && 'blur-sm')}>
-            {item.name}
-          </p>
-          <p className="text-xs">{item.usersProfile?.position}</p>
-        </div>
-      </Link>
+    <li onClick={onClick} className="flex items-center gap-4">
+      <Avatar className={cn(authtorized && 'blur-sm')}>
+        <AvatarImage src={getImageUrl(item.image)} />
+        <AvatarFallback>{name.charAt(0)}</AvatarFallback>
+      </Avatar>
+      <div className="flex w-full flex-col gap-1 border-b border-white/10 py-3">
+        <p className={cn('select-none text-sm font-semibold', authtorized && 'blur-sm')}>
+          {item.name}
+        </p>
+        <p className="text-xs">{item.usersProfile?.position}</p>
+      </div>
     </li>
   );
 }
