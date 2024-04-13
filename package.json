@@ -4,8 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
-    "compile": "next experimental-compile",
+    "build": "next build --experimental-build-mode compile",
     "db:push": "drizzle-kit push:pg",
     "db:studio": "drizzle-kit studio",
     "db:migrate": "pnpm tsx src/scripts/migrate.ts",
@@ -37,7 +36,7 @@
     "lucide-react": "^0.367.0",
     "minio": "^7.1.3",
     "nanoid": "^5.0.7",
-    "next": "^14.1.4",
+    "next": "^14.2.1",
     "postgres": "^3.4.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
