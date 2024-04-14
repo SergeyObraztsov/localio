@@ -8,7 +8,7 @@ import { spotSubscriptions, users, usersProfiles } from '../server/db/schema';
 import { saveFileInBucket } from './static-files-actions';
 
 const MAX_FILE_SIZE = 500000;
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic'];
 
 export async function getUser(userId: number) {
   return await db.query.users.findFirst({
@@ -119,7 +119,7 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
       .refine((file) => {
         if (!file.size) return true;
         return ACCEPTED_IMAGE_TYPES.includes(file?.type ?? '');
-      }, '.jpg, .jpeg, .png and .webp files are accepted.')
+      }, '.jpg, .jpeg, .png, .heic и .webp форматы поддерживаются.')
   });
 
   const parse = schema.safeParse({
@@ -180,6 +180,13 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
 }
 
 export const exitFromSpot = async (userId: number, spotId: string) => {
+  await db
+    .delete(spotSubscriptions)
+    .where(and(eq(spotSubscriptions.userId, userId), eq(spotSubscriptions.spotId, spotId)));
+  revalidatePath(`/spot/${spotId}`);
+};
+
+export const unsubscribeSpot = async (userId: number, spotId: string) => {
   await db
     .delete(spotSubscriptions)
     .where(and(eq(spotSubscriptions.userId, userId), eq(spotSubscriptions.spotId, spotId)));

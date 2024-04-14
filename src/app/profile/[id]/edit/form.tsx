@@ -28,13 +28,17 @@ export default function Form({ user, spots }: FormProps) {
   const [isChanging, setChanging] = useState(false);
 
   const editUserHandler = async (prevState: FormState, formData: FormData) => {
-    setChanging(true);
-    const result = await editUserProfile(prevState, formData);
-    setChanging(false);
-    if (result.isSuccessful) {
-      router.push(`/profile/${telegramUser?.id}`);
+    try {
+      setChanging(true);
+      const result = await editUserProfile(prevState, formData);
+      setChanging(false);
+      if (result.isSuccessful) {
+        router.back();
+      }
+      return result;
+    } catch (error) {
+      return { message: 'Произошла ошибка', isSuccessful: false };
     }
-    return result;
   };
 
   const [state, formAction] = useFormState(editUserHandler, initialState);

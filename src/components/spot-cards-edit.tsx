@@ -6,7 +6,7 @@ import { Button } from './ui/button';
 
 import WebApp from '@twa-dev/sdk';
 import { useState } from 'react';
-import { exitFromSpot } from '~/actions/user-actions';
+import { unsubscribeSpot } from '~/actions/user-actions';
 import {
   Dialog,
   DialogContent,
@@ -25,10 +25,14 @@ export default function SpotCardEdit({ list }: { list: UserSpot[] }) {
   const deletingItem = list.find((item) => item.id === deletingId);
 
   const deleteSpotSubscriptionHandler = async () => {
-    setIsLoading(true);
-    if (user?.id && deletingItem?.spot.id) await exitFromSpot(user?.id, deletingItem?.spot.id);
-    setDeletingId(null);
-    setIsLoading(false);
+    try {
+      setIsLoading(true);
+      if (user?.id && deletingItem?.spot.id) await unsubscribeSpot(user?.id, deletingItem?.spot.id);
+      setDeletingId(null);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -46,12 +50,18 @@ export default function SpotCardEdit({ list }: { list: UserSpot[] }) {
               <DialogDescription>Выйти со спота {deletingItem?.spot.name}?</DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button onClick={() => setDeletingId(null)} variant="outline" disabled={isLoading}>
+              <Button
+                onClick={() => setDeletingId(null)}
+                type="button"
+                variant="outline"
+                disabled={isLoading}
+              >
                 Отмена
               </Button>
 
               <Button
                 onClick={deleteSpotSubscriptionHandler}
+                type="button"
                 variant="destructive"
                 disabled={isLoading}
               >
@@ -73,7 +83,13 @@ function SpotRow({ item, onDelete }: { item: UserSpot; onDelete: () => void }) {
         <h3 className="text-sm">{item.spot.name}</h3>
         <p className="text-[10px] text-white/40">{item.spot.location}</p>
       </div>
-      <Button onClick={onDelete} variant="ghost" size="icon" className="flex-1 justify-end">
+      <Button
+        onClick={onDelete}
+        type="button"
+        variant="ghost"
+        size="icon"
+        className="flex-1 justify-end"
+      >
         <Image src="/Delete.svg" alt="" width={24} height={24} />
       </Button>
     </div>

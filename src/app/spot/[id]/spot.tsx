@@ -34,6 +34,12 @@ export default function Spot({ spot }: { spot: Spot }) {
     void fetchProfile();
   }, [user?.id]);
 
+  useEffect(() => {
+    WebApp.expand();
+    WebApp.setBackgroundColor('#141516');
+    WebApp.setHeaderColor('#000000');
+  }, []);
+
   const exitSpotHandler = async () => {
     if (!user?.id) return;
     setEnteringSpot(true);

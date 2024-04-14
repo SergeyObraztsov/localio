@@ -10,7 +10,7 @@ import { saveFileInBucket } from './static-files-actions';
 import { enterSpot } from './user-actions';
 
 const MAX_FILE_SIZE = 500000;
-const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+const ACCEPTED_IMAGE_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic'];
 
 export async function createUser(prevState: FormState, formData: FormData) {
   const schema = z.object({
@@ -30,7 +30,7 @@ export async function createUser(prevState: FormState, formData: FormData) {
       .refine((file) => {
         if (!file.size) return true;
         return ACCEPTED_IMAGE_TYPES.includes(file?.type ?? '');
-      }, '.jpg, .jpeg, .png and .webp форматы поддерживаются.')
+      }, '.jpg, .jpeg, .png, .heic и .webp форматы поддерживаются.')
   });
 
   const parse = schema.safeParse({

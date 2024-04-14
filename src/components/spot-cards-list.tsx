@@ -33,7 +33,7 @@ function SpotCard({ item }: { item: UserSpot }) {
           height={48}
           className="pt-2"
         />
-        <h3 className="mt-auto text-sm font-bold">{item.spot.name}</h3>
+        <h3 className="mt-auto text-center text-sm font-bold">{item.spot.name}</h3>
       </div>
     </Link>
   );
