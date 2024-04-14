@@ -14,8 +14,6 @@ import { Button } from '~/components/ui/button';
 import { getImageUrl } from '~/lib/utils';
 import type { Spot, User } from '~/types/common';
 
-import Geotag from '/icons/geotag.svg'
-
 export default function Spot({ spot }: { spot: Spot }) {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -63,7 +61,7 @@ export default function Spot({ spot }: { spot: Spot }) {
           <h1 className="line-clamp-1 text-ellipsis text-2xl font-bold">{spot?.name}</h1>
           <div className="flex items-center gap-1">
             <Image
-              src={Geotag}
+              src={'/public/icons/geotag.svg'}
               alt="geo-icon"
               width={24}
               height={24}
