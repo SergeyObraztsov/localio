@@ -68,3 +68,18 @@ export type User = {
     position: string | null;
   } | null;
 };
+
+export type WebAppUser = {
+  id: number;
+  is_bot?: boolean;
+  first_name: string;
+  last_name?: string;
+  username?: string;
+  language_code?: string;
+  is_premium?: boolean;
+  photo_url?: string;
+};
+export type TelegramUser = WebAppUser & {
+  added_to_attachment_menu?: boolean;
+  allows_write_to_pm?: boolean;
+};

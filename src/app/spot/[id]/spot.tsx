@@ -14,12 +14,14 @@ import { Button } from '~/components/ui/button';
 import { getImageUrl } from '~/lib/utils';
 import type { Spot, User } from '~/types/common';
 
+import Geotag from '/public/icons/geotag.svg'
+
 export default function Spot({ spot }: { spot: Spot }) {
-  const user = WebApp.initDataUnsafe?.user;
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-
-  const [userData, setuserData] = useState<Omit<User, 'usersProfile'> | null>(null);
+  const user= WebApp.initDataUnsafe?.user
+  
+  const [userData, setUserData] = useState<Omit<User, 'usersProfile'> | null>(null);
   const [isProfileFetching, setProfileFetching] = useState(false);
   const [isEnteringSpot, setEnteringSpot] = useState(false);
 
@@ -28,7 +30,7 @@ export default function Spot({ spot }: { spot: Spot }) {
       if (!user?.id) return;
       setProfileFetching(true);
       const userData = await getUser(user?.id);
-      setuserData(userData as Omit<User, 'usersProfile'>);
+      setUserData(userData as Omit<User, 'usersProfile'>);
       setProfileFetching(false);
     };
     void fetchProfile();
@@ -61,7 +63,7 @@ export default function Spot({ spot }: { spot: Spot }) {
           <h1 className="line-clamp-1 text-ellipsis text-2xl font-bold">{spot?.name}</h1>
           <div className="flex items-center gap-1">
             <Image
-              src="/icons/geotag.svg"
+              src={Geotag}
               alt="geo-icon"
               width={24}
               height={24}
