@@ -14,7 +14,7 @@ import { Button } from '~/components/ui/button';
 import { getImageUrl } from '~/lib/utils';
 import type { Spot, User } from '~/types/common';
 
-import Geotag from '/public/icons/geotag.svg'
+import Geotag from '/icons/geotag.svg'
 
 export default function Spot({ spot }: { spot: Spot }) {
   const { id } = useParams<{ id: string }>();
