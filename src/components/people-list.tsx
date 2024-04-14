@@ -1,7 +1,8 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
-import { cn, getImageUrl, morph } from '~/lib/utils';
+import { imageLoader } from '~/lib/image-loader';
+import { cn, morph } from '~/lib/utils';
 import type { SpotSubscription, SpotUser } from '~/types/common';
 
 export default function PeopleList({
@@ -12,8 +13,8 @@ export default function PeopleList({
   authtorized?: boolean;
 }) {
   const router = useRouter();
-  const clickHandler = (id: number) => {
-    if (!authtorized) return;
+  const clickHandler = (id?: number) => {
+    if (!authtorized || !id) return;
     router.push(`/profile/${id}`);
   };
 
@@ -30,7 +31,7 @@ export default function PeopleList({
               key={item.id}
               item={item.user!}
               authtorized={authtorized}
-              onClick={() => clickHandler(item.id)}
+              onClick={() => clickHandler(item.user?.id)}
             />
           ))}
       </ul>
@@ -51,7 +52,7 @@ function PeopleListItem({
   return (
     <li onClick={onClick} className="flex items-center gap-4">
       <Avatar className={cn(authtorized && 'blur-sm')}>
-        <AvatarImage src={getImageUrl(item.image)} />
+        <AvatarImage src={imageLoader({ src: item.image ?? '', width: 48 })} />
         <AvatarFallback>{name.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex w-full flex-col gap-1 border-b border-white/10 py-3">

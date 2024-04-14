@@ -32,7 +32,7 @@ export type SpotSubscription = {
 };
 
 export type SpotUser = {
-  id: string;
+  id: number;
   name: string | null;
   image: string | null;
   usersProfile: UsersProfile | null;

@@ -9,7 +9,7 @@ import { createUser } from '~/actions/auth-actions';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
-import { getImageUrl } from '~/lib/utils';
+import { imageLoader } from '~/lib/image-loader';
 import type { FormState } from '~/types/common';
 import SubmitButton from '../../submit-button';
 
@@ -66,10 +66,9 @@ export default function ProfilePage() {
             <div className="relative flex h-[100px] w-[100px] items-center justify-center overflow-hidden rounded-full bg-white/10">
               {hasPhoto ? (
                 <Image
+                  loader={imageLoader}
                   src={
-                    avatarFile
-                      ? URL.createObjectURL(avatarFile)
-                      : getImageUrl(telegramUser?.photo_url)
+                    (avatarFile ? URL.createObjectURL(avatarFile) : telegramUser?.photo_url) ?? ''
                   }
                   alt="image"
                   fill
@@ -78,7 +77,7 @@ export default function ProfilePage() {
                 />
               ) : (
                 <Image
-                  src={'/icons/camera.svg'}
+                  src={'/camera.svg'}
                   alt="camera-icon"
                   width={38}
                   height={34}

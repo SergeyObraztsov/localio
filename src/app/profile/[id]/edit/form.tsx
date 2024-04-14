@@ -11,7 +11,7 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
-import { getImageUrl } from '~/lib/utils';
+import { imageLoader } from '~/lib/image-loader';
 import type { FormState, User, UserSpot } from '~/types/common';
 
 const initialState: FormState = {
@@ -66,15 +66,28 @@ export default function Form({ user, spots }: FormProps) {
       <div className="flex w-full flex-col items-center justify-center">
         <Label htmlFor="image" className="flex flex-col items-center justify-center gap-2">
           <AspectRatio ratio={1}>
-            <Image
-              className="overflow-hidden rounded-full object-cover"
-              src={avatarFile ? URL.createObjectURL(avatarFile) : getImageUrl(user?.image)}
-              alt=""
-              fill
-              draggable={false}
-              loading="eager"
-              quality={100}
-            />
+            {avatarFile ? (
+              <Image
+                className="overflow-hidden rounded-full object-cover"
+                src={URL.createObjectURL(avatarFile)}
+                alt=""
+                fill
+                draggable={false}
+                loading="eager"
+                quality={100}
+              />
+            ) : (
+              <Image
+                className="overflow-hidden rounded-full object-cover"
+                loader={imageLoader}
+                src={user?.image ?? ''}
+                alt=""
+                fill
+                draggable={false}
+                loading="eager"
+                quality={100}
+              />
+            )}
           </AspectRatio>
           <p className="text-sm font-normal">Изменить фото</p>
         </Label>

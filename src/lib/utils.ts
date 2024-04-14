@@ -13,11 +13,6 @@ export function generate4DigitCode() {
   return randomNumber.toString().padStart(4, '0');
 }
 
-export function getImageUrl(fileName?: string | null) {
-  if (!fileName) return '';
-  return '/api/static?fileName=' + fileName;
-}
-
 export function morph(amount: number, array: string[]) {
   const index: number =
     amount % 100 > 4 && amount % 100 < 20

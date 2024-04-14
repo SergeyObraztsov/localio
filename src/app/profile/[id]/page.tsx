@@ -2,11 +2,11 @@ import Image from 'next/image';
 import { getUserProfile, getUserSpots } from '~/actions/user-actions';
 import SpotCardList from '~/components/spot-cards-list';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
+import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
-import { getImageUrl } from '~/lib/utils';
+import { imageLoader } from '~/lib/image-loader';
 import type { UserSpot } from '~/types/common';
 import ProfileHeader from './profile-header';
-import TelegramInput from './telegram-input';
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -18,7 +18,8 @@ export default async function ProfilePage({ params }: { params: { id: string } }
 
       <AspectRatio ratio={1} className="relative w-full bg-white/10">
         <Image
-          src={getImageUrl(user?.image)}
+          loader={imageLoader}
+          src={user?.image ?? ''}
           alt=""
           draggable={false}
           className="object-cover"
@@ -32,6 +33,12 @@ export default async function ProfilePage({ params }: { params: { id: string } }
 
       <main className="flex flex-col gap-6">
         <p className="px-4">{user?.usersProfile?.position}</p>
+        <Button className="mx-4 rounded-full bg-[#3290EC] font-light hover:bg-[#3290EC]/90" asChild>
+          <a href={`https://t.me/${user?.telegramUsername}`} rel="noreferrer" target="_blank">
+            <Image src={'/telegram.svg'} alt={''} width={21} height={17} className="mr-2" />
+            Написать в Телеграм
+          </a>
+        </Button>
         {!!spots.length && <SpotCardList list={spots as UserSpot[]} />}
         <div className="flex flex-col gap-4 px-4">
           <h2 className="font-bold">О себе</h2>
@@ -40,7 +47,13 @@ export default async function ProfilePage({ params }: { params: { id: string } }
         <div className="flex flex-col gap-4 px-4">
           <h2 className="font-bold">Контакты в других соцсетях</h2>
           <div className="overflow-hidden rounded-lg">
-            <TelegramInput />
+            <Input
+              type="text"
+              readOnly
+              className="rounded-none border-b border-b-white/10 read-only:border-b"
+              label="Телеграм"
+              defaultValue={'@' + (user?.telegramUsername ?? '')}
+            />
             <Input
               type="text"
               readOnly

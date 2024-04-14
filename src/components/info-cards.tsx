@@ -12,7 +12,7 @@ const Cards: { id: number; title: string; description: React.ReactNode; imageSrc
     id: 1,
     title: 'Зарегистрируйтесь',
     description: 'Чтобы увидеть подписчиков спота',
-    imageSrc: '/icons/enter.svg'
+    imageSrc: '/enter.svg'
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ const Cards: { id: number; title: string; description: React.ReactNode; imageSrc
         </Button>
       </>
     ),
-    imageSrc: '/icons/telegram.svg'
+    imageSrc: '/telegram.svg'
   }
 ];
 

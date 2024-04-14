@@ -11,14 +11,14 @@ import TelegramMainButton from '~/components/telegram-main-button';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
-import { getImageUrl } from '~/lib/utils';
+import { imageLoader } from '~/lib/image-loader';
 import type { Spot, User } from '~/types/common';
 
 export default function Spot({ spot }: { spot: Spot }) {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
-  const user= WebApp.initDataUnsafe?.user
-  
+  const user = WebApp.initDataUnsafe?.user;
+
   const [userData, setUserData] = useState<Omit<User, 'usersProfile'> | null>(null);
   const [isProfileFetching, setProfileFetching] = useState(false);
   const [isEnteringSpot, setEnteringSpot] = useState(false);
@@ -60,20 +60,14 @@ export default function Spot({ spot }: { spot: Spot }) {
         <div className="flex flex-col gap-1">
           <h1 className="line-clamp-1 text-ellipsis text-2xl font-bold">{spot?.name}</h1>
           <div className="flex items-center gap-1">
-            <Image
-              src={'/public/icons/geotag.svg'}
-              alt="geo-icon"
-              width={24}
-              height={24}
-              draggable={false}
-            />
+            <Image src={'/geotag.svg'} alt="geo-icon" width={24} height={24} draggable={false} />
             <p className="line-clamp-1 text-ellipsis text-sm font-normal">{spot?.location}</p>
           </div>
         </div>
         {userData && (
           <Link href={`/profile/${user?.id}`} passHref>
             <Avatar>
-              <AvatarImage src={getImageUrl(userData.image)} />
+              <AvatarImage src={imageLoader({ src: userData.image ?? '', width: 48 })} />
               <AvatarFallback>{spot?.name?.charAt(0)}</AvatarFallback>
             </Avatar>
           </Link>
@@ -82,7 +76,8 @@ export default function Spot({ spot }: { spot: Spot }) {
 
       <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-md bg-white/40">
         <ImageWithFallback
-          src={getImageUrl(spot?.image)}
+          loader={imageLoader}
+          src={spot?.image ?? ''}
           fallback=""
           alt="place-image"
           fill
