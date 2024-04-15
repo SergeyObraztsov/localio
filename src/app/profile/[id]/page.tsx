@@ -47,10 +47,14 @@ export default async function ProfilePage({ params }: { params: { id: string } }
           </a>
         </Button>
         {!!spots.length && <SpotCardList list={spots as UserSpot[]} />}
+
         <div className="flex flex-col gap-4 px-4">
           <h2 className="font-bold">О себе</h2>
-          <Input type="text" value={user?.usersProfile?.description ?? ''} readOnly />
+          <div className="h-fit resize-none rounded-lg bg-white/10 px-3 py-2 text-sm">
+            <p className="whitespace-pre-line">{user?.usersProfile?.description ?? ''}</p>
+          </div>
         </div>
+
         <div className="flex flex-col gap-4 px-4">
           <h2 className="font-bold">Контакты в других соцсетях</h2>
           <div className="overflow-hidden rounded-lg">

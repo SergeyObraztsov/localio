@@ -52,7 +52,7 @@ function PeopleListItem({
   return (
     <li onClick={onClick} className="flex items-center gap-4">
       <Avatar className={cn(!authtorized && 'blur-sm')}>
-        <AvatarImage src={imageLoader({ src: item.image ?? '', width: 48 })} />
+        <AvatarImage src={imageLoader({ src: item.image ?? '', width: 48 })} draggable={false} />
         <AvatarFallback>{name.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex w-full flex-col gap-1 border-b border-white/10 py-3">

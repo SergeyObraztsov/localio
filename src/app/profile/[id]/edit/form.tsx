@@ -41,6 +41,7 @@ export default function Form({ user, spots }: FormProps) {
       }
       return result;
     } catch (error) {
+      console.log(error);
       return { message: 'Произошла ошибка', isSuccessful: false };
     }
   };

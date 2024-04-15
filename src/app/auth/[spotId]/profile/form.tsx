@@ -32,11 +32,8 @@ export default function ProfileForm() {
   const hasPhoto = !!telegramUser?.photo_url || !!avatarFile;
 
   const createUserHandler = async (prevState: FormState, formData: FormData) => {
-    console.log(0);
     try {
-      console.log(1);
       const result = await createUser(prevState, formData);
-      console.log(2);
       if (result.isSuccessful) {
         router.back();
       }

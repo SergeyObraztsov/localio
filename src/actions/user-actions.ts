@@ -139,6 +139,7 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
 
   const { userId, name, position, email, description, phoneNumber, image } = parse.data;
   let fileName;
+
   if (image.size) {
     try {
       fileName = await saveFileInBucket(image);
@@ -153,8 +154,8 @@ export async function editUserProfile(prevState: FormState, formData: FormData) 
       .update(users)
       .set({
         name,
-        email,
-        phoneNumber,
+        email: email || null,
+        phoneNumber: phoneNumber || null,
         image: fileName
       })
       .where(eq(users.id, Number(userId)));

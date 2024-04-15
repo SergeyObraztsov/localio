@@ -95,16 +95,19 @@ export default function Spot({ spot }: { spot: Spot }) {
 
       <PeopleList list={spot?.subscriptions ?? []} authtorized={!!userData} />
 
-      <div className="flex-1" />
+      <div className="flex-1 pb-4" />
 
       {/* <InfoCards /> */}
       {showEnterButton ? (
         <>
-          <p className="text-center text-white/40">
-            {!!spot?.subscriptions.length
-              ? 'Нажав на кнопку, ты увидишь подписчиков'
-              : 'Нажав на кнопку, ты будешь первым на споте'}
-          </p>
+          <div className="fixed bottom-0 left-0 w-full text-center">
+            <p className="py-2 text-white/40">
+              {!!spot?.subscriptions.length
+                ? 'Нажав на кнопку, ты увидишь подписчиков'
+                : 'Нажав на кнопку, ты будешь первым на споте'}
+            </p>
+            <div className="absolute bottom-0 left-0 -z-10 h-12 w-full bg-gradient-to-t from-gray-dark from-80%" />
+          </div>
           <TelegramMainButton
             text="Хочу общаться"
             onClick={enterSpotHandler}
