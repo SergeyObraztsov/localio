@@ -1,6 +1,4 @@
 'use client';
-import { AspectRatio } from '@radix-ui/react-aspect-ratio';
-import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import WebApp from '@twa-dev/sdk';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -14,6 +12,8 @@ import { imageLoader } from '~/lib/image-loader';
 import type { Spot, User } from '~/types/common';
 
 import Geotag from '~/assets/geotag.svg';
+import { AspectRatio } from '~/components/ui/aspect-ratio';
+import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 
 export default function Spot({ spot }: { spot: Spot }) {
   const { id } = useParams<{ id: string }>();
@@ -74,7 +74,7 @@ export default function Spot({ spot }: { spot: Spot }) {
         </div>
         {userData && (
           <Link href={`/profile/${user?.id}`} passHref>
-            <Avatar className="h-12 w-12">
+            <Avatar>
               <AvatarImage src={imageLoader({ src: userData.image ?? '', width: 48 })} />
               <AvatarFallback>{spot?.name?.charAt(0)}</AvatarFallback>
             </Avatar>
