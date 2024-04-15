@@ -13,6 +13,8 @@ import { Button } from '~/components/ui/button';
 import { imageLoader } from '~/lib/image-loader';
 import type { Spot, User } from '~/types/common';
 
+import Geotag from '~/assets/geotag.svg';
+
 export default function Spot({ spot }: { spot: Spot }) {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -65,13 +67,14 @@ export default function Spot({ spot }: { spot: Spot }) {
         <div className="flex flex-col gap-1">
           <h1 className="line-clamp-1 text-ellipsis text-2xl font-bold">{spot?.name}</h1>
           <div className="flex items-center gap-1">
-            <Image src={'/geotag.svg'} alt="geo-icon" width={24} height={24} draggable={false} />
+            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+            <Image src={Geotag} alt="geo-icon" width={24} height={24} draggable={false} />
             <p className="line-clamp-1 text-ellipsis text-sm font-normal">{spot?.location}</p>
           </div>
         </div>
         {userData && (
           <Link href={`/profile/${user?.id}`} passHref>
-            <Avatar>
+            <Avatar className="h-12 w-12">
               <AvatarImage src={imageLoader({ src: userData.image ?? '', width: 48 })} />
               <AvatarFallback>{spot?.name?.charAt(0)}</AvatarFallback>
             </Avatar>
@@ -90,7 +93,7 @@ export default function Spot({ spot }: { spot: Spot }) {
         />
       </AspectRatio>
 
-      <PeopleList list={spot?.subscriptions ?? []} authtorized={!userData} />
+      <PeopleList list={spot?.subscriptions ?? []} authtorized={!!userData} />
 
       <div className="flex-1" />
 

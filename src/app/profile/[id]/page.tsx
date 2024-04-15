@@ -8,6 +8,8 @@ import { Input } from '~/components/ui/input';
 import { imageLoader } from '~/lib/image-loader';
 import type { UserSpot } from '~/types/common';
 
+import TelegramIcon from '~/assets/telegram.svg';
+
 const ProfileHeader = dynamic(() => import('./profile-header'), {
   ssr: false
 });
@@ -39,7 +41,8 @@ export default async function ProfilePage({ params }: { params: { id: string } }
         <p className="px-4">{user?.usersProfile?.position}</p>
         <Button className="mx-4 rounded-full bg-[#3290EC] font-light hover:bg-[#3290EC]/90" asChild>
           <a href={`https://t.me/${user?.telegramUsername}`} rel="noreferrer" target="_blank">
-            <Image src={'/telegram.svg'} alt={''} width={21} height={17} className="mr-2" />
+            {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+            <Image src={TelegramIcon} alt={''} width={21} height={17} className="mr-2" />
             Написать в Телеграм
           </a>
         </Button>

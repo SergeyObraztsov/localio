@@ -13,6 +13,8 @@ import { imageLoader } from '~/lib/image-loader';
 import type { FormState } from '~/types/common';
 import SubmitButton from '../../submit-button';
 
+import CameraIcon from '~/assets/camera.svg';
+
 const initialState: FormState = {
   message: '',
   isSuccessful: true
@@ -30,13 +32,17 @@ export default function ProfileForm() {
   const hasPhoto = !!telegramUser?.photo_url || !!avatarFile;
 
   const createUserHandler = async (prevState: FormState, formData: FormData) => {
+    console.log(0);
     try {
+      console.log(1);
       const result = await createUser(prevState, formData);
+      console.log(2);
       if (result.isSuccessful) {
         router.back();
       }
       return result;
     } catch (error) {
+      console.log(error);
       return { message: 'Произошла ошибка', isSuccessful: false };
     }
   };
@@ -81,7 +87,8 @@ export default function ProfileForm() {
                 />
               ) : (
                 <Image
-                  src={'/camera.svg'}
+                  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                  src={CameraIcon}
                   alt="camera-icon"
                   width={38}
                   height={34}

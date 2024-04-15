@@ -17,6 +17,8 @@ import {
   DialogTitle
 } from '~/components/ui/dialog';
 
+import DeleteIcon from '~/assets/Delete.svg';
+
 export default function SpotCardEdit({ list }: { list: UserSpot[] }) {
   const user = WebApp.initDataUnsafe?.user;
   const [deletingId, setDeletingId] = useState<number | null>(null);
@@ -90,7 +92,8 @@ function SpotRow({ item, onDelete }: { item: UserSpot; onDelete: () => void }) {
         size="icon"
         className="flex-1 justify-end"
       >
-        <Image src="/Delete.svg" alt="" width={24} height={24} />
+        {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
+        <Image src={DeleteIcon} alt="" width={24} height={24} />
       </Button>
     </div>
   );

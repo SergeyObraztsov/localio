@@ -29,6 +29,7 @@ export async function createUser(prevState: FormState, formData: FormData) {
       }, `Максимальный размер фото 5MB.`)
       .refine((file) => {
         if (!file.size) return true;
+        console.log(file?.type);
         return ACCEPTED_IMAGE_TYPES.includes(file?.type ?? '');
       }, '.jpg, .jpeg, .png, .heic и .webp форматы поддерживаются.')
   });

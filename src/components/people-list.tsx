@@ -51,12 +51,12 @@ function PeopleListItem({
   const name = item.name ?? '';
   return (
     <li onClick={onClick} className="flex items-center gap-4">
-      <Avatar className={cn(authtorized && 'blur-sm')}>
+      <Avatar className={cn(!authtorized && 'blur-sm')}>
         <AvatarImage src={imageLoader({ src: item.image ?? '', width: 48 })} />
         <AvatarFallback>{name.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex w-full flex-col gap-1 border-b border-white/10 py-3">
-        <p className={cn('select-none text-sm font-semibold', authtorized && 'blur-sm')}>
+        <p className={cn('select-none text-sm font-semibold', !authtorized && 'blur-sm')}>
           {item.name}
         </p>
         <p className="text-xs">{item.usersProfile?.position}</p>
