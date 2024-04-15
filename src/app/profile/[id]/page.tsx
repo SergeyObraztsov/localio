@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { getUserProfile, getUserSpots } from '~/actions/user-actions';
 import SpotCardList from '~/components/spot-cards-list';
@@ -6,7 +7,10 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { imageLoader } from '~/lib/image-loader';
 import type { UserSpot } from '~/types/common';
-import ProfileHeader from './profile-header';
+
+const ProfileHeader = dynamic(() => import('./profile-header'), {
+  ssr: false
+});
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
   const id = params.id;

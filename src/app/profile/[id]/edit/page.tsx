@@ -1,6 +1,10 @@
+import dynamic from 'next/dynamic';
 import { getUserProfile, getUserSpots } from '~/actions/user-actions';
 import type { User, UserSpot } from '~/types/common';
-import Form from './form';
+
+const Form = dynamic(() => import('./form'), {
+  ssr: false
+});
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
   const id = params.id;

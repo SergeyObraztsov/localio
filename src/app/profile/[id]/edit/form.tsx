@@ -1,11 +1,11 @@
 'use client';
 import WebApp from '@twa-dev/sdk';
+import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
 import { editUserProfile } from '~/actions/user-actions';
-import SpotCardEdit from '~/components/spot-cards-edit';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
@@ -13,6 +13,10 @@ import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
 import { imageLoader } from '~/lib/image-loader';
 import type { FormState, User, UserSpot } from '~/types/common';
+
+const SpotCardEdit = dynamic(() => import('~/components/spot-cards-edit'), {
+  ssr: false
+});
 
 const initialState: FormState = {
   message: '',

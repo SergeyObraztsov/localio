@@ -1,15 +1,14 @@
 'use client';
+import { AspectRatio } from '@radix-ui/react-aspect-ratio';
+import { Avatar, AvatarFallback, AvatarImage } from '@radix-ui/react-avatar';
 import WebApp from '@twa-dev/sdk';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { enterSpot, exitFromSpot, getUser } from '~/actions/user-actions';
-import ImageWithFallback from '~/components/image-with-fallback';
 import PeopleList from '~/components/people-list';
 import TelegramMainButton from '~/components/telegram-main-button';
-import { AspectRatio } from '~/components/ui/aspect-ratio';
-import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
 import { Button } from '~/components/ui/button';
 import { imageLoader } from '~/lib/image-loader';
 import type { Spot, User } from '~/types/common';
@@ -24,6 +23,12 @@ export default function Spot({ spot }: { spot: Spot }) {
   const [isEnteringSpot, setEnteringSpot] = useState(false);
 
   useEffect(() => {
+    WebApp.expand();
+    WebApp.setBackgroundColor('#141516');
+    WebApp.setHeaderColor('#000000');
+  }, []);
+
+  useEffect(() => {
     const fetchProfile = async () => {
       if (!user?.id) return;
       setProfileFetching(true);
@@ -33,12 +38,6 @@ export default function Spot({ spot }: { spot: Spot }) {
     };
     void fetchProfile();
   }, [user?.id]);
-
-  useEffect(() => {
-    WebApp.expand();
-    WebApp.setBackgroundColor('#141516');
-    WebApp.setHeaderColor('#000000');
-  }, []);
 
   const exitSpotHandler = async () => {
     if (!user?.id) return;
@@ -81,10 +80,9 @@ export default function Spot({ spot }: { spot: Spot }) {
       </header>
 
       <AspectRatio ratio={16 / 9} className="overflow-hidden rounded-md bg-white/40">
-        <ImageWithFallback
+        <Image
           loader={imageLoader}
           src={spot?.image ?? ''}
-          fallback=""
           alt="place-image"
           fill
           draggable={false}
