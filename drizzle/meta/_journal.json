@@ -22,6 +22,13 @@
       "when": 1712781589990,
       "tag": "0002_perpetual_quasimodo",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1713252239349,
+      "tag": "0003_nostalgic_sprite",
+      "breakpoints": true
     }
   ]
 }

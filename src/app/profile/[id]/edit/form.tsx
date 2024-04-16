@@ -5,13 +5,14 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useFormState } from 'react-dom';
-import { editUserProfile } from '~/actions/user-actions';
+import { deleteUser, editUserProfile } from '~/actions/user-actions';
 import { AspectRatio } from '~/components/ui/aspect-ratio';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { Textarea } from '~/components/ui/textarea';
 import { imageLoader } from '~/lib/image-loader';
+import { cn } from '~/lib/utils';
 import type { FormState, User, UserSpot } from '~/types/common';
 
 const SpotCardEdit = dynamic(() => import('~/components/spot-cards-edit'), {
@@ -20,7 +21,7 @@ const SpotCardEdit = dynamic(() => import('~/components/spot-cards-edit'), {
 
 const initialState: FormState = {
   message: '',
-  isSuccessful: false
+  isSuccessful: true
 };
 
 type FormProps = { user: User; spots: UserSpot[] };
@@ -30,6 +31,7 @@ export default function Form({ user, spots }: FormProps) {
   const telegramUser = WebApp.initDataUnsafe?.user;
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [isChanging, setChanging] = useState(false);
+  const [isFormFocused, setFormFocused] = useState(false);
 
   const editUserHandler = async (prevState: FormState, formData: FormData) => {
     try {
@@ -46,9 +48,20 @@ export default function Form({ user, spots }: FormProps) {
     }
   };
 
+  const deleteUserHandler = async () => {
+    if (!telegramUser?.id) return;
+    await deleteUser(telegramUser?.id);
+    WebApp.close();
+  };
+
   const [state, formAction] = useFormState(editUserHandler, initialState);
   return (
-    <form className="relative flex h-full min-h-dvh flex-col gap-6 p-4" action={formAction}>
+    <form
+      className="relative flex h-full min-h-dvh flex-col gap-6 p-4"
+      action={formAction}
+      onFocus={() => setFormFocused(true)}
+      onBlur={() => setFormFocused(false)}
+    >
       <input name="userId" defaultValue={telegramUser?.id} hidden />
       <header className="flex w-full justify-between">
         <Button
@@ -175,7 +188,13 @@ export default function Form({ user, spots }: FormProps) {
 
       {!state.isSuccessful && <Label className="pt-2 text-[10px] text-red">{state.message}</Label>}
 
-      <Button variant="link" size={'inline'} className="mt-auto self-start text-white/40">
+      <Button
+        onClick={deleteUserHandler}
+        type="button"
+        variant="link"
+        size="inline"
+        className={cn('self-start text-white/40', isFormFocused && 'pb-64')}
+      >
         Удалить аккаунт
       </Button>
     </form>

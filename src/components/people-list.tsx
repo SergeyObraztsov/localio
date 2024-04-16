@@ -7,10 +7,12 @@ import type { SpotSubscription, SpotUser } from '~/types/common';
 
 export default function PeopleList({
   list,
-  authtorized
+  authtorized,
+  subscribed
 }: {
   list: SpotSubscription[];
   authtorized?: boolean;
+  subscribed?: boolean;
 }) {
   const router = useRouter();
   const clickHandler = (id?: number) => {
@@ -32,6 +34,7 @@ export default function PeopleList({
               item={item.user!}
               authtorized={authtorized}
               onClick={() => clickHandler(item.user?.id)}
+              subscribed={subscribed}
             />
           ))}
       </ul>
@@ -42,21 +45,24 @@ export default function PeopleList({
 function PeopleListItem({
   item,
   authtorized,
+  subscribed,
   onClick
 }: {
   item: SpotUser;
   authtorized?: boolean;
+  subscribed?: boolean;
   onClick: () => void;
 }) {
   const name = item.name ?? '';
+  const isBlurred = !authtorized || !subscribed;
   return (
     <li onClick={onClick} className="flex items-center gap-4">
-      <Avatar className={cn(!authtorized && 'blur-sm')}>
+      <Avatar className={cn(isBlurred && 'blur-sm')}>
         <AvatarImage src={imageLoader({ src: item.image ?? '', width: 48 })} draggable={false} />
         <AvatarFallback>{name.charAt(0)}</AvatarFallback>
       </Avatar>
       <div className="flex w-full flex-col gap-1 border-b border-white/10 py-3">
-        <p className={cn('select-none text-sm font-semibold', !authtorized && 'blur-sm')}>
+        <p className={cn('select-none text-sm font-semibold', isBlurred && 'blur-sm')}>
           {item.name}
         </p>
         <p className="text-xs">{item.usersProfile?.position}</p>

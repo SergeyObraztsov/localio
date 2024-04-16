@@ -39,7 +39,7 @@ export const usersRelations = relations(users, ({ one }) => ({
 export const usersProfiles = createTable('user_profile', {
   id: serial('id').primaryKey().unique(),
   userId: integer('user_id')
-    .references(() => users.id)
+    .references(() => users.id, { onDelete: 'cascade' })
     .unique(),
   position: varchar('position', { length: 256 }),
   description: text('description')
@@ -76,8 +76,8 @@ export const spotTypes = createTable('spot_type', {
 
 export const spotSubscriptions = createTable('spot_subscription', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id),
-  spotId: uuid('spot_id').references(() => spots.id),
+  userId: integer('user_id').references(() => users.id, { onDelete: 'cascade' }),
+  spotId: uuid('spot_id').references(() => spots.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at')
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),
