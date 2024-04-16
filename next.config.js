@@ -6,8 +6,7 @@ await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
 const config = {
-  experimental: { serverActions: { bodySizeLimit: 10000 } },
-  serverActions: { bodySizeLimit: 10000 }
+  serverActions: { bodySizeLimit: '10mb' }
 };
 
 export default config;
